@@ -1,15 +1,18 @@
 const fs = require('fs');
+const {capitalize} = require('./helpers');
 const Language = require('./classes/Language');
-const races = require('./data/races');
+const Character = require('./classes/Character');
+global.races = require('./data/races');
+global.races.forEach(race => race.language = new Language(race.languageConfig));
 
 let output = '';
 
-races.forEach(race => {
-    const lang = new Language(race.languageConfig);
-    const line = race.name + ', example ' + race.language + ' (' + lang.name + ') word: ' + lang.generateWord();
-    output += line + '\n';
-    console.log(line);
-});
+const protagonist = new Character('good');
+const antagonist = new Character('bad');
 
-// console.log(output);
+output += `${capitalize(protagonist.describe())} steps up and says, "${protagonist.introduce()}"
+
+But ${antagonist.describe()} stands in ${protagonist.pronoun.possessive} way and says, "${antagonist.introduce()}"`;
+
+console.log(output);
 fs.writeFileSync('./novel.txt', output);

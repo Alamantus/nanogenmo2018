@@ -1,4 +1,4 @@
-const {randomInt, percentChance, capitalizeWords} = require('../helpers');
+const {randomInt, choose, percentChance, capitalizeWords} = require('../helpers');
 
 const consonants = [
     'b', 'bl', 'br',
@@ -57,7 +57,7 @@ module.exports = class Language {
         }
         this.consonants = consonants.filter(doAddConsonant);
         while (this.consonants.length < minConsonants) {
-            const consonant = consonants[randomInt(0, consonants.length - 1)];
+            const consonant = choose(consonants);
             if (!this.consonants.includes(consonant) && doAddConsonant(consonant)) {
                 this.consonants.push(consonant);
             }
@@ -74,7 +74,7 @@ module.exports = class Language {
         }
         this.vowels = vowels.filter(doAddVowel);
         while (this.vowels.length < minVowels) {
-            const vowel = vowels[randomInt(0, vowels.length - 1)];
+            const vowel = choose(vowels);
             if (!this.vowels.includes(vowel) && doAddVowel(vowel)) {
                 this.vowels.push(vowel);
             }
@@ -90,7 +90,7 @@ module.exports = class Language {
 
         for (let i = 0; i < numberOfCharacters; i++) {
             const listToUse = (i % 2 === (startWithConsonant ? 0 : 1)) ? this.consonants : this.vowels;
-            characters.push(listToUse[randomInt(0, listToUse.length - 1)]);
+            characters.push(choose(listToUse));
         }
         
         return characters.join('');

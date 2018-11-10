@@ -1,7 +1,10 @@
 module.exports = [
     {
         name: 'human',
-        language: 'ancient',
+        type: 'good',
+        minHeight: 5,
+        maxHeight: 6,
+        languageName: 'Ancient',
         languageConfig: {
             minConsonants: 10,
             consonantExclusions: [
@@ -33,7 +36,10 @@ module.exports = [
     },
     {
         name: 'elf',
-        language: 'elvish',
+        type: 'good',
+        minHeight: 5,
+        maxHeight: 7,
+        languageName: 'Elvish',
         languageConfig: {
             minConsonants: 4,
             doubleConsonantPercentChance: 0,
@@ -56,7 +62,10 @@ module.exports = [
     },
     {
         name: 'dwarf',
-        language: 'dwarvish',
+        type: 'good',
+        minHeight: 4,
+        maxHeight: 5,
+        languageName: 'Dwarvish',
         languageConfig: {
             minWordLength: 4,
             maxWordLength: 10,
@@ -96,7 +105,10 @@ module.exports = [
     },
     {
         name: 'orc',
-        language: 'orcish',
+        type: 'bad',
+        minHeight: 6,
+        maxHeight: 7,
+        languageName: 'Orcish',
         languageConfig: {
             minWordLength: 2,
             maxWordLength: 5,
@@ -122,7 +134,10 @@ module.exports = [
     },
     {
         name: 'goblin',
-        language: 'goblin',
+        type: 'bad',
+        minHeight: 3,
+        maxHeight: 4,
+        languageName: 'Goblin',
         languageConfig: {
             minWordLength: 3,
             maxWordLength: 11,

@@ -1,9 +1,15 @@
 const fs = require('fs');
 const Language = require('./classes/Language');
+const races = require('./data/races');
 
-const lang = new Language();
+let output = '';
 
-const output = lang.name;
+races.forEach(race => {
+    const lang = new Language(race.languageConfig);
+    const line = race.name + ', example ' + race.language + ' (' + lang.name + ') word: ' + lang.generateWord();
+    output += line + '\n';
+    console.log(line);
+});
 
-console.log(output);
+// console.log(output);
 fs.writeFileSync('./novel.txt', output);

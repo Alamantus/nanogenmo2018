@@ -1,0 +1,9 @@
+{
+  "name": "nanogenmo2018",
+  "version": "0.0.0",
+  "description": "A generator that creates a high fantasy novel",
+  "main": "index.js",
+  "repository": "https://github.com/Alamantus/nanogenmo2018.git",
+  "author": "Robbie Antenesse <dev@alamantus.com>",
+  "license": "MIT"
+}

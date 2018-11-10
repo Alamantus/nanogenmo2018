@@ -1,5 +1,8 @@
 const fs = require('fs');
+const Language = require('./classes/Language');
 
-const output = 'hello';
+const lang = new Language();
+
+const output = lang.name;
 
 fs.writeFileSync('./novel.txt', output);

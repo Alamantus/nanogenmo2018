@@ -107,13 +107,23 @@ module.exports = class Language {
         return characters.join('');
     }
 
-    generateSentence (numberOfWords, punctuation) {
+    generateSentence (numberOfWords, punctuation, includeOnce) {
         numberOfWords = numberOfWords ? numberOfWords : randomInt(4, 14);
         punctuation = punctuation ? punctuation : choose(['.', '!', '?']);
+        const includeWhere = includeOnce ? randomInt(0, numberOfWords - 1) : false;
+
+        const fancySpace = () => (percentChance(15) ? (percentChance(5) ? '; ' : ', ') : ' ');
+        
         let sentence = capitalizeWords(choose(this.words));
 
         for (let i = 0; i < numberOfWords; i++) {
-            sentence += (percentChance(20) ? ', ' : ' ') + choose(this.words);
+            let word = choose(this.words);
+            word = percentChance(5) ? capitalizeWords(word) : word;
+            sentence += fancySpace();
+            if (includeWhere !== false && i === includeWhere) {
+                sentence += includeOnce + fancySpace();
+            }
+            sentence += word;
         }
 
         return sentence + punctuation;

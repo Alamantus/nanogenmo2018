@@ -19,7 +19,7 @@ const capitalize = (string) => {
 }
 
 const capitalizeWords = (string) => {
-    return string.split(' ').map(word => capitalize(word)).join('');
+    return string.split(' ').map(word => capitalize(word)).join(' ');
 }
 
 const firstLetterIsVowel = (string) => {

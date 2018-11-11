@@ -74,6 +74,10 @@ module.exports = class Character {
         }
     }
 
+    get fullName () {
+        return this.name + ' ' + this.lastName;
+    }
+
     get heightString () {
         const height = this.height.toFixed(1);
         const inches = parseInt(height.substr(height.indexOf('.') + 1));

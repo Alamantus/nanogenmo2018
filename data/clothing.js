@@ -1,0 +1,37 @@
+module.exports = {
+    torso: [
+        'blouse',
+        'shirt',
+        'tunic',
+        'leather armor',
+        'chain mail',
+    ],
+    legs: [
+        'skirt',
+        'pants',
+        'shorts',
+        'greaves',
+        'loincloth',
+    ],
+    head: [
+        'floppy hat',
+        'cap',
+        'hood',
+        'cowl',
+        'bonnet',
+        'helmet',
+    ],
+    colors: [
+        'black',
+        'tan',
+        'brown',
+        'blue',
+        'green',
+        'red',
+        'white',
+        'yellow',
+        'maroon',
+        'orange',
+        'purple',
+    ],
+}

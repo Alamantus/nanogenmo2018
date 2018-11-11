@@ -81,6 +81,17 @@ module.exports = class Language {
         }
 
         this.name = capitalizeWords(this.generateWord());
+
+        this.words = [];
+        let attempts = 0;
+        while (this.words.length < 50 && attempts < 10) {
+            const word = this.generateWord();
+            if (!this.words.includes(word)) {
+                this.words.push(word);
+            } else {
+                attempts++;
+            }
+        }
     }
 
     generateWord (length = null) {
@@ -94,5 +105,17 @@ module.exports = class Language {
         }
         
         return characters.join('');
+    }
+
+    generateSentence (numberOfWords, punctuation) {
+        numberOfWords = numberOfWords ? numberOfWords : randomInt(4, 14);
+        punctuation = punctuation ? punctuation : choose(['.', '!', '?']);
+        let sentence = capitalizeWords(choose(this.words));
+
+        for (let i = 0; i < numberOfWords; i++) {
+            sentence += (percentChance(20) ? ', ' : ' ') + choose(this.words);
+        }
+
+        return sentence + punctuation;
     }
 }

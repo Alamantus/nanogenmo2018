@@ -1,9 +1,9 @@
 const random = (min = 0, max = 1) => {
-    return (Math.random() * (max - min + 1)) + min;
+    return (Math.random() * (max - min)) + min;
 }
 
 const randomInt = (min = 0, max = 1) => {
-    return Math.floor(random(min, max));
+    return Math.round(random(min, max));
 }
 
 const choose = (array) => {

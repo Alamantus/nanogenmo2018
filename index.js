@@ -1,18 +1,37 @@
 const fs = require('fs');
-const {capitalize} = require('./helpers');
 const Language = require('./classes/Language');
 const Character = require('./classes/Character');
+const Chapter = require('./segments/Chapter');
 global.races = require('./data/races');
 global.races.forEach(race => race.language = new Language(race.languageConfig));
 
-let output = '';
+class Story {
+    constructor() {
+        this.protagonist = new Character('good');
+        this.antagonist = new Character('bad');
+        this.chapterNumber = 1;
+    }
 
-const protagonist = new Character('good');
-const antagonist = new Character('bad');
+    numberOfWords (string) {
+        const wordsBySpaces = string.split(' ').length;
+        const wordsByHyphens = string.split('-').length;
+        const wordsByEmdashes = string.split('—').length;
+        return wordsBySpaces + wordsByHyphens + wordsByEmdashes;
+    }
 
-output += `${capitalize(protagonist.describe())} steps up and says, "${protagonist.introduce()}"
+    write () {
+        let output = Chapter(this);
+        
+        // while(this.numberOfWords(output) < 50000) {
+        //     output += '\n\n' + Chapter(this);
+        // }
 
-But ${antagonist.describe()} stands in ${protagonist.pronoun.possessive} way and says, "${antagonist.introduce()}"`;
+        output += '\n\n' + this.numberOfWords(output) + ' words';
 
-console.log(output);
-fs.writeFileSync('./novel.txt', output);
+        console.log(output);
+        fs.writeFileSync('./novel.txt', output);
+    }
+}
+
+const story = new Story();
+story.write();

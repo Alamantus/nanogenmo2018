@@ -9,50 +9,8 @@ const {
     correctArticle,
 } = require('../helpers');
 
-const personalities = [
-    'sweet',
-    'kind',
-    'mean',
-    'salty',
-];
-
-const clothing = {
-    torso: [
-        'blouse',
-        'shirt',
-        'tunic',
-        'leather armor',
-        'chain mail',
-    ],
-    legs: [
-        'skirt',
-        'pants',
-        'shorts',
-        'greaves',
-        'loincloth',
-    ],
-    head: [
-        'floppy hat',
-        'cap',
-        'hood',
-        'cowl',
-        'bonnet',
-        'helmet',
-    ],
-    colors: [
-        'black',
-        'tan',
-        'brown',
-        'blue',
-        'green',
-        'red',
-        'white',
-        'yellow',
-        'maroon',
-        'orange',
-        'purple',
-    ],
-}
+const clothing = require ('../data/clothing');
+const weapons = require ('../data/weapons');
 
 module.exports = class Character {
     constructor(type = 'good', {
@@ -90,6 +48,16 @@ module.exports = class Character {
 
         this.personality = choose(['neutral', 'sweet', 'kind', 'mean', 'salty']);
 
+        this.maxHP = randomInt(20, 50);
+        this.hp = this.maxHP;
+        this.stats = {
+            bravery: randomInt(25, 75),
+            rationality: randomInt(15, 85),
+            luck: randomInt(0, 100),
+            violence: randomInt(0, 100),
+        };
+        this.weapon = choose(weapons);
+
         this.clothing = {
             torso: {
                 type: choose(clothing.torso),
@@ -104,6 +72,12 @@ module.exports = class Character {
                 color: (percentChance(25) ? choose(clothing.colors) + '-and-' : '') + choose(clothing.colors),
             } : null,
         }
+    }
+
+    get heightString () {
+        const height = this.height.toFixed(1);
+        const inches = parseInt(height.substr(height.indexOf('.') + 1));
+        return Math.floor(this.height) + ' feet' + (inches > 0 ? ' and ' +  inches + ' inch' + (inches == 1 ? '' : 'es') : '') + ' tall';
     }
 
     introduce () {
@@ -121,7 +95,7 @@ module.exports = class Character {
     }
 
     describe () {
-        return `${correctArticle(this.gender)} ${this.gender} ${this.race.name} who is about ${this.height.toFixed(1)} feet tall`
+        return `${correctArticle(this.gender)} ${this.gender} ${this.race.name} who is about ${this.heightString}`
             + ` and wearing ${correctArticle(this.clothing.torso.color)} ${this.clothing.torso.color} ${this.clothing.torso.type}`
             + ` with ${correctArticle(this.clothing.legs.color)} ${this.clothing.legs.color} ${this.clothing.legs.type}`
             + (this.clothing.head ? ` and ${correctArticle(this.clothing.head.color)} ${this.clothing.head.color} ${this.clothing.head.type} on ${this.pronoun.possessive} head` : '');

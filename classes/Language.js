@@ -107,6 +107,10 @@ module.exports = class Language {
         return characters.join('');
     }
 
+    generateName () {
+        return capitalizeWords(this.generateWord(randomInt(3, 7)));
+    }
+
     generateSentence (numberOfWords, punctuation, includeOnce) {
         numberOfWords = numberOfWords ? numberOfWords : randomInt(4, 14);
         punctuation = punctuation ? punctuation : choose(['.', '!', '?']);

@@ -20,8 +20,8 @@ module.exports = class Character {
         
         const typeRaces = global.races.filter(race => race.type == type);
         this.race = race ? race : choose(typeRaces);
-        this.name = capitalize(this.race.language.generateWord());
-        this.lastName = capitalize(this.race.language.generateWord());
+        this.name = this.race.language.generateName();
+        this.lastName = this.race.language.generateName();
         
         this.gender = choose(['female', 'male', 'feminine', 'masculine', 'nonbinary']);
         switch (this.gender) {

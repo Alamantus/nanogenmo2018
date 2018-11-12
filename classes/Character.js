@@ -15,11 +15,15 @@ const weapons = require ('../data/weapons');
 module.exports = class Character {
     constructor(type = 'good', {
         race,
+        knowsProtagonist,
     } = {}) {
         this.type = type;
         
         const typeRaces = global.races.filter(race => race.type == type);
         this.race = race ? race : choose(typeRaces);
+
+        this.knowsProtagonist = knowsProtagonist ? knowsProtagonist : percentChance(50);
+
         this.name = this.race.language.generateName();
         this.lastName = this.race.language.generateName();
         
@@ -57,6 +61,7 @@ module.exports = class Character {
             violence: randomInt(0, 100),
         };
         this.weapon = choose(weapons);
+        this.weaponExperience = choose(['master', 'learner', 'user']);
 
         this.clothing = {
             torso: {
@@ -72,6 +77,8 @@ module.exports = class Character {
                 color: (percentChance(25) ? choose(clothing.colors) + '-and-' : '') + choose(clothing.colors),
             } : null,
         }
+
+        this.homeType = choose(['house', 'cottage', 'shack', 'hovel', 'cave', 'dwelling', 'bungalow', 'cabin']);
     }
 
     get fullName () {
@@ -98,9 +105,9 @@ module.exports = class Character {
         return introduction;
     }
 
-    describe () {
-        return `${correctArticle(this.gender)} ${this.gender} ${this.race.name} who is about ${this.heightString}`
-            + ` and wearing ${correctArticle(this.clothing.torso.color)} ${this.clothing.torso.color} ${this.clothing.torso.type}`
+    describe (definiteArticle = false) {
+        return `${definiteArticle ? 'the' : correctArticle(this.gender)} ${this.gender} ${this.race.name} who was about ${this.heightString}`
+            + ` and wore ${correctArticle(this.clothing.torso.color)} ${this.clothing.torso.color} ${this.clothing.torso.type}`
             + ` with ${correctArticle(this.clothing.legs.color)} ${this.clothing.legs.color} ${this.clothing.legs.type}`
             + (this.clothing.head ? ` and ${correctArticle(this.clothing.head.color)} ${this.clothing.head.color} ${this.clothing.head.type} on ${this.pronoun.possessive} head` : '');
     }

@@ -9,7 +9,8 @@ global.locations = require('./data/locations');
 
 class Story {
     constructor() {
-        this.protagonist = new Character('good');
+        this.protagonist = new Character('good', { knowsProtagonist: true, });
+        this.protagonist.homeland = choose(['town', 'village', 'city', 'homestead', 'villa', 'fiefdom', 'homeland']);
         this.party = this.generateParty();
         this.antagonist = new Character('bad');
         this.antagonist.title = 'the ' + choose(['breaker', 'destroyer', 'doom-bringer', 'destroyer of innocence', 'evil', 'great evil', 'destroyer of worlds']);
@@ -19,11 +20,12 @@ class Story {
         this.storyType = choose(['quest', 'revenge', 'rescue', 'restoration']);
         this.title = this.generateTitle();
         this.numberOfWords = 0;
+        this.rulerTitle = choose(['king', 'queen', 'ruler', 'chancellor', 'duke', 'dutchess', 'lord', 'lady', 'leader']);
     }
 
     generateParty () {
-        const party = [this.protagonist];
-        const number = randomInt(1, 3);
+        const party = [];
+        const number = randomInt(2, 3);
         for (let i = 0; i < number; i++) {
             party.push(new Character('good'));
         }

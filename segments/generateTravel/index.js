@@ -1,4 +1,8 @@
-const {randomInt, choose} = require('../../helpers');
+const {percentChance, choose} = require('../../helpers');
+
+const generateWalk = require('./generateWalk');
+const generateExplore = require('./generateExplore');
+const generateRest = require('./generateRest');
 
 module.exports = (story) => {
   let output = '';
@@ -12,21 +16,7 @@ module.exports = (story) => {
   story.currentLocation = Object.assign({}, choose(story.locations));
   story.currentLocation.place = choose(story.currentLocation.places);
 
-  let action;
-  switch (randomInt(0, 2)) {
-    case 0: {
-      action = 'walked through';
-      break;
-    }
-    case 1: {
-      action = 'explored';
-      break;
-    }
-    case 2: {
-      action = 'traveled through';
-      break;
-    }
-  }
+  const action = choose(['walked through', 'explored', 'rested at']);
 
   if (lastLocation.name == story.currentLocation.name) {
     if (lastLocation.place == story.currentLocation.place) {
@@ -39,6 +29,21 @@ module.exports = (story) => {
   }
 
   output += ` the ${story.currentLocation.specifier}. They are ${story.currentLocation.place.preposition} the ${story.currentLocation.place.type} called "${story.currentLocation.place.name}"`;
+
+  switch (action) {
+    case 'walked through': {
+      output += generateWalk(story);
+      break;
+    }
+    case 'explored': {
+      output += generateExplore(story);
+      break;
+    }
+    case 'rested at': {
+      output += generateRest(story);
+      break;
+    }
+  }
 
   return output;
 }

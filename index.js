@@ -5,7 +5,8 @@ const Character = require('./classes/Character');
 const generateChapter = require('./segments/generateChapter');
 global.races = require('./data/races');
 global.races.forEach(race => race.language = new Language(race.languageConfig));
-global.locations = require('./data/locations');
+const wordCollection = require('./data/words');
+const possibleLocations = require('./data/locations');
 
 class Story {
     constructor() {
@@ -14,8 +15,14 @@ class Story {
         this.party = this.generateParty();
         this.antagonist = new Character('bad');
         this.antagonist.title = 'the ' + choose(['breaker', 'destroyer', 'doom-bringer', 'destroyer of innocence', 'evil', 'great evil', 'destroyer of worlds']);
+
         this.worldName = this.protagonist.race.language.generateName();
         this.evilPlaceName = this.antagonist.race.language.generateName();
+        this.locations = this.generateLocations();
+        this.visited = [];
+        this.currentLocation = choose(this.locations);
+        this.lastLocation = null;
+        
         this.chapterNumber = 1;
         this.storyType = choose(['quest', 'revenge', 'rescue', 'restoration']);
         this.title = this.generateTitle();
@@ -25,11 +32,31 @@ class Story {
 
     generateParty () {
         const party = [];
-        const number = randomInt(2, 3);
+        const number = randomInt(2, 4);
         for (let i = 0; i < number; i++) {
             party.push(new Character('good'));
         }
         return party;
+    }
+
+    generateLocations () {
+        const locations = [];
+        const number = randomInt(15, 30);
+        for (let i = 0; i < number; i++) {
+            const newLocation = Object.assign({ origin: choose(global.races) }, choose(possibleLocations));
+            newLocation.name = newLocation.origin.language.generateName();
+            newLocation.specifier = `${newLocation.type} ${percentChance(50) ? 'of' : 'called'} ${newLocation.name}`;
+            newLocation.places.forEach(place => {
+                if (['town', 'city'].includes(newLocation.type)) {
+                    place.name = (percentChance(50) ? choose(wordCollection.superlatives) : 'The ' + choose(wordCollection.adjectives)) + ' ' + choose(wordCollection.nouns)[0];
+                    place.name = capitalizeWords(place.name);
+                } else {
+                    place.name = newLocation.origin.language.generateName();
+                }
+            });
+            locations.push(newLocation);
+        }
+        return locations;
     }
 
     generateTitle () {

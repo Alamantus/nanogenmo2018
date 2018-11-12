@@ -1,5 +1,6 @@
 const {randomInt, percentChance, choose, capitalize} = require('../helpers');
 const generateIntro = require('./generateIntro');
+const generateTravel = require('./generateTravel');
 
 module.exports = (story) => {
     const quoteRace = choose(global.races);
@@ -17,27 +18,7 @@ module.exports = (story) => {
 
     switch (typeOfChapter) {
         default: {
-            const location = choose(global.locations);
-            location.name = choose(global.races).language.generateName();
-            const place = choose(location.places);
-            let action;
-            switch (randomInt(0, 2)) {
-                case 0: {
-                    action = 'walking through';
-                    break;
-                }
-                case 1: {
-                    action = 'exploring';
-                    break;
-                }
-                case 2: {
-                    action = 'traveling through';
-                    break;
-                }
-            }
-
-            output += percentChance(50) ? 'We find our heroes ' : 'Our heroes are ';
-            output += `${action} the ${place} of ${location.name} ${location.type}.`;
+            output += generateTravel(story);
             break;
         }
         case 'beginning': {

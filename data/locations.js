@@ -2,47 +2,110 @@ module.exports = [
     {
         type: 'town',
         places: [
-            'tavern',
-            'well',
-            'inn',
-            'shop',
-            'blacksmith',
+            {
+                type: 'tavern',
+                preposition: 'in',
+            },
+            {
+                type: 'well',
+                preposition: 'at',
+            },
+            {
+                type: 'inn',
+                preposition: 'at',
+            },
+            {
+                type: 'shop',
+                preposition: 'in',
+            },
+            {
+                type: 'blacksmith',
+                preposition: 'at',
+            },
         ],
     },
     {
         type: 'city',
         places: [
-            'bar',
-            'plaza',
-            'market',
-            'armory',
-            'specialty shop',
+            {
+                type: 'bar',
+                preposition: 'in',
+            },
+            {
+                type: 'plaza',
+                preposition: 'in',
+            },
+            {
+                type: 'market',
+                preposition: 'in',
+            },
+            {
+                type: 'armory',
+                preposition: 'at',
+            },
+            {
+                type: 'specialty shop',
+                preposition: 'in',
+            },
         ],
     },
     {
         type: 'plains',
         places: [
-            'path',
-            'field',
-            'hill',
+            {
+                type: 'path',
+                preposition: 'on',
+            },
+            {
+                type: 'field',
+                preposition: 'in',
+            },
+            {
+                type: 'hill',
+                preposition: 'on',
+            },
         ],
     },
     {
         type: 'forest',
         places: [
-            'clearing',
-            'thicket',
-            'path',
-            'grove',
+            {
+                type: 'clearing',
+                preposition: 'in',
+            },
+            {
+                type: 'thicket',
+                preposition: 'in',
+            },
+            {
+                type: 'path',
+                preposition: 'on',
+            },
+            {
+                type: 'grove',
+                preposition: 'in',
+            },
         ],
     },
     {
         type: 'mountain',
         places: [
-            'path',
-            'cliff',
-            'cave',
-            'peak',
+            {
+                type: 'path',
+                preposition: 'on',
+            },
+            {
+                type: 'cliff',
+                preposition: 'at the edge of',
+            },
+            {
+                type: 'cave',
+                preposition: 'in',
+            },
+            {
+                type: 'peak',
+                preposition: 'at',
+            },
         ],
     },
 ];

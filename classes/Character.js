@@ -3,9 +3,6 @@ const {
     randomInt,
     choose,
     percentChance,
-    capitalize,
-    capitalizeWords,
-    firstLetterIsVowel,
     correctArticle,
 } = require('../helpers');
 

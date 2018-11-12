@@ -63,17 +63,23 @@ module.exports = class Character {
         this.weapon = choose(weapons);
         this.weaponExperience = choose(['master', 'learner', 'user']);
 
+        let torso = choose(clothing.torso);
+        let legs = choose(clothing.legs);
+        let head = choose(clothing.head);
         this.clothing = {
             torso: {
-                type: choose(clothing.torso),
+                type: torso.name,
+                needsArticle: torso.needsArticle,
                 color: (percentChance(25) ? choose(clothing.colors) + '-and-' : '') + choose(clothing.colors),
             },
             legs: {
-                type: choose(clothing.legs),
+                type: legs.name,
+                needsArticle: legs.needsArticle,
                 color: (percentChance(25) ? choose(clothing.colors) + '-and-' : '') + choose(clothing.colors),
             },
             head: percentChance(50) ? {
-                type: choose(clothing.head),
+                type: head.name,
+                needsArticle: head.needsArticle,
                 color: (percentChance(25) ? choose(clothing.colors) + '-and-' : '') + choose(clothing.colors),
             } : null,
         }
@@ -107,8 +113,8 @@ module.exports = class Character {
 
     describe (definiteArticle = false) {
         return `${definiteArticle ? 'the' : correctArticle(this.gender)} ${this.gender} ${this.race.name} who was about ${this.heightString}`
-            + ` and wore ${correctArticle(this.clothing.torso.color)} ${this.clothing.torso.color} ${this.clothing.torso.type}`
-            + ` with ${correctArticle(this.clothing.legs.color)} ${this.clothing.legs.color} ${this.clothing.legs.type}`
-            + (this.clothing.head ? ` and ${correctArticle(this.clothing.head.color)} ${this.clothing.head.color} ${this.clothing.head.type} on ${this.pronoun.possessive} head` : '');
+            + ` and wore ${this.clothing.torso.needsArticle ? correctArticle(this.clothing.torso.color) + ' ' : ''}${this.clothing.torso.color} ${this.clothing.torso.type}`
+            + ` with ${this.clothing.legs.needsArticle ? correctArticle(this.clothing.legs.color) + ' ' : ''}${this.clothing.legs.color} ${this.clothing.legs.type}`
+            + (this.clothing.head ? ` and ${this.clothing.head.needsArticle ? correctArticle(this.clothing.head.color) + ' ' : ''}${this.clothing.head.color} ${this.clothing.head.type} on ${this.pronoun.possessive} head` : '');
     }
 }

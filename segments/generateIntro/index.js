@@ -71,7 +71,13 @@ module.exports = (story) => {
         output += `Fortunately, ${story.protagonist.pronoun.subject} knew ${story.protagonist.pronoun.subject} could count on at least ${friendPartyMembers.length} friend${friendPartyMembers.length == 1 ? '' : 's'} to come help ${story.protagonist.pronoun.object} on ${story.protagonist.pronoun.possessive} journey.`;
         output += '\n\n';
 
-        friendPartyMembers.forEach(friend => {
+        friendPartyMembers.forEach((friend, index) => {
+            if (index !== 0 && index !== friendPartyMembers.length - 1) {
+                output += 'Next, ';
+            } else if (index !== 0 && index === friendPartyMembers.length - 1) {
+                output += 'Finally, ';
+            }
+
             output += `${story.protagonist.name} ${travelVerb} to ${friend.name}, the ${friend.race.name} ${friend.weapon.name}-${friend.weaponExperience}'s, ${friend.homeType} to request their assistance. `;
 
             output += friendReply(friend, story);
@@ -106,7 +112,13 @@ module.exports = (story) => {
 
         output += '\n\n';
         
-        strangerPartyMembers.forEach(stranger => {
+        strangerPartyMembers.forEach((stranger, index) => {
+            if (index !== 0 && index !== friendPartyMembers.length - 1) {
+                output += 'Next, ';
+            } else if (index !== 0 && index === friendPartyMembers.length - 1) {
+                output += 'Finally, ';
+            }
+
             output += `${capitalize(stranger.describe())} stood and said, "${stranger.introduce()} I am a ${stranger.weaponExperience} of the ${stranger.weapon.name}."`;
 
             output += '\n\n';

@@ -30,6 +30,26 @@ class Story {
         this.rulerTitle = choose(['king', 'queen', 'ruler', 'chancellor', 'duke', 'dutchess', 'lord', 'lady', 'leader']);
     }
 
+    get fullParty () {
+        return [this.protagonist, ...this.party];
+    }
+
+    get averageLuck () {
+        return this.fullParty.reduce((total, member) => total += member.stats.luck, 0) / this.fullParty.length;
+    }
+
+    get averageViolence () {
+        return this.fullParty.reduce((total, member) => total += member.stats.violence, 0) / this.fullParty.length;
+    }
+
+    get averageBravery () {
+        return this.fullParty.reduce((total, member) => total += member.stats.bravery, 0) / this.fullParty.length;
+    }
+
+    get averageRationality () {
+        return this.fullParty.reduce((total, member) => total += member.stats.rationality, 0) / this.fullParty.length;
+    }
+
     generateParty () {
         const party = [];
         const number = randomInt(2, 4);

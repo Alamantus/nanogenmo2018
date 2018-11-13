@@ -4,7 +4,7 @@ const generateWalk = require('./generateWalk');
 const generateExplore = require('./generateExplore');
 const generateRest = require('./generateRest');
 
-module.exports = (story) => {
+const generateTravel = (story, randomizeLocation = true) => {
   let output = '';
   
   story.visited.push({
@@ -13,8 +13,11 @@ module.exports = (story) => {
     place: story.currentLocation.place,
   });
   const lastLocation = story.visited[story.visited.length - 1];
-  story.currentLocation = Object.assign({}, choose(story.locations));
-  story.currentLocation.place = choose(story.currentLocation.places);
+
+  if (randomizeLocation) {
+    story.currentLocation = Object.assign({}, choose(story.locations));
+    story.currentLocation.place = choose(story.currentLocation.places);
+  }
 
   const action = choose(['walked through', 'explored', 'rested at']);
 
@@ -28,22 +31,28 @@ module.exports = (story) => {
     output += 'Our heroes ' + action;
   }
 
-  output += ` the ${story.currentLocation.specifier}. They are ${story.currentLocation.place.preposition} the ${story.currentLocation.place.type} called "${story.currentLocation.place.name}"`;
+  output += ` the ${story.currentLocation.specifier}. They were ${story.currentLocation.place.preposition} the ${story.currentLocation.place.type} called "${story.currentLocation.place.name}"`;
 
   switch (action) {
+    default:
     case 'walked through': {
-      output += generateWalk(story);
+      output += ', trying to make their way through.\n\n';
+      output += generateWalk(story, generateTravel);
       break;
     }
-    case 'explored': {
-      output += generateExplore(story);
-      break;
-    }
-    case 'rested at': {
-      output += generateRest(story);
-      break;
-    }
+    // case 'explored': {
+    //   output += ', seeing what they could find.\n\n';
+    //   output += generateExplore(story);
+    //   break;
+    // }
+    // case 'rested at': {
+    //   output += ', recovering from all the walking they had done.\n\n';
+    //   output += generateRest(story);
+    //   break;
+    // }
   }
 
   return output;
 }
+
+module.exports = generateTravel;

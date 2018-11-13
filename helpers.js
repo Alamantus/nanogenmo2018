@@ -10,6 +10,10 @@ const choose = (array) => {
     return array[randomInt(0, array.length - 1)];
 }
 
+const shuffle = (array) => {
+    return array.sort(() => Math.random() - 0.5);
+}
+
 const percentChance = (percent) => {
     return random(0, 100) < percent;
 }
@@ -34,6 +38,7 @@ module.exports = {
     random,
     randomInt,
     choose,
+    shuffle,
     percentChance,
     capitalize,
     capitalizeWords,

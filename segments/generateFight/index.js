@@ -1,6 +1,13 @@
-const {randomInt, percentChance, choose, shuffle, capitalize} = require('../../helpers');
+const {
+  randomInt,
+  percentChance,
+  choose,
+  capitalize,
+  correctArticle,
+} = require('../../helpers');
 
 const reactToDamage = require('./reactToDamage');
+const die = require('./die');
 
 module.exports = (turnOrder) => {
   let output = '';
@@ -10,11 +17,6 @@ module.exports = (turnOrder) => {
 
   const anEnemyIsAlive = () => enemies.some(enemy => enemy.hp > 0);
   const didLoseFight = () => party.every(member => member.hp <= 0);
-
-  // output += '\n\n';
-  // output += anEnemyIsAlive ? 'enemyIsAlive' : 'enemyNOTalive';
-  // output += '\n\n';
-  // output += didLoseFight ? 'didLoseFight' : 'didWinFight';
   
   while (anEnemyIsAlive() && !didLoseFight()) {
     turnOrder.forEach(character => {
@@ -28,41 +30,19 @@ module.exports = (turnOrder) => {
       const targetName = `${target.hasOwnProperty('personality') ? '' : 'the '}${target.name}`;
 
       output += `${capitalize(characterName)} stepped up to attack ${targetName} with `;
-      output += (character.hasOwnProperty('weapon') ? `${character.pronoun.possessive} ${character.weapon.name}` : `a ${character.attack}`) + '... ';
+      output += (character.hasOwnProperty('weapon') ? `${character.pronoun.possessive} ${character.weapon.name}` : `${correctArticle(character.attack)} ${character.attack}`) + '... ';
         
       if (percentChance(attackObject.accuracy)) {
         const damageRatio = damage / target.hp;
         target.hp -= damage;
         
-        output += `${capitalize(characterName)} ${attackObject.attack} ${target.name}`;
+        output += `${capitalize(characterName)} ${attackObject.verb} ${targetName}`;
 
         if (target.hasOwnProperty('personality')) {
-          output += reactToDamage(damageRatio, target);
+          output += reactToDamage(damageRatio, target) + ' ';
 
           if (target.hp <= 0) {
-            output += ` ${target.name} succumbed to the pain`;
-            switch (target.personality) {
-              default: {
-                output += ` and fell to ${target.pronoun.possessive} knees.`;
-                break;
-              }
-              case 'sweet': {
-                output += `, crying out as ${target.pronoun.subject} fell backwards.`;
-                break;
-              }
-              case 'kind': {
-                output += `, dropping to ${target.pronoun.possessive} knees and falling to their side.`;
-                break;
-              }
-              case 'mean': {
-                output += `, yelling out in anger as ${target.pronoun.subject} fell.`;
-                break;
-              }
-              case 'salty': {
-                output += ` and groaned as ${target.pronoun.subject} slumped backward.`;
-                break;
-              }
-            }
+            die(target);
           }
         } else {
           output += ` and the ${target.name} `;
@@ -79,17 +59,16 @@ module.exports = (turnOrder) => {
           }
         }
       } else {
-        output += `But ${character.hasOwnProperty('pronoun') ? character.pronoun.subject : 'it'} missed!`;
+        output += `But ${character.hasOwnProperty('pronoun') ? character.pronoun.subject : 'it'} missed! `;
       }
-
-      output += '\n\n';
     });
+    output += '\n\n';
   }
 
   if (didLoseFight()) {
-    output += 'The party pulls itself together, running away before they can get battered any more than they already have been!';
+    output += 'The party pulled itself together and ran away before they could get battered any more than they already had been!';
   } else {
-    output += 'The party gathers itself together in victory, continuing their trek onward.';
+    output += 'The party gathered itself together in victory, continuing their trek onward.';
   }
   
   return output;

@@ -2,6 +2,7 @@ module.exports = [
     {
         name: 'sword',
         attack: 'cut',
+        verb: 'cut',
         accuracy: 80,
         minDamage: 3,
         maxDamage: 5,
@@ -9,6 +10,7 @@ module.exports = [
     {
         name: 'dagger',
         attack: 'stab',
+        verb: 'stabbed',
         accuracy: 75,
         minDamage: 2,
         maxDamage: 4,
@@ -16,6 +18,7 @@ module.exports = [
     {
         name: 'warhammer',
         attack: 'slam',
+        verb: 'slammed',
         accuracy: 60,
         minDamage: 3,
         maxDamage: 6,
@@ -23,6 +26,7 @@ module.exports = [
     {
         name: 'quarterstaff',
         attack: 'hit',
+        verb: 'hit',
         accuracy: 75,
         minDamage: 2,
         maxDamage: 5,
@@ -30,6 +34,7 @@ module.exports = [
     {
         name: 'bow',
         attack: 'shoot',
+        verb: 'shot',
         accuracy: 50,
         minDamage: 1,
         maxDamage: 5,

@@ -8,15 +8,30 @@ module.exports = (story, generateTravel) => {
 
   const monsters = [];
   let monsterString = '';
-  const numberOfEnemies = randomInt(1, (!percentChance(story.averageLuck) ? 5 : 2));
+  const numberOfEnemies = randomInt(1, (percentChance(story.averageLuck) ? 2 : 5));
   for (let i = 0; i < numberOfEnemies; i++) {
     const monster = Object.assign({ isEnemy: true }, choose(allMonsters));
-    monsterString += correctArticle(monster.name) + ' ' + monster.name;
-    if (i < numberOfEnemies - 1) {
-      monsterString += ' and ';
-    }
     monsters.push(monster);
   }
+  let monsterCount = monsters.reduce((collection, monster) => {
+    const monsterIndex = collection.findIndex(item => item.name == monster.name);
+    if (monsterIndex < 0) {
+      collection.push({name: monster.name, quantity: 1});
+    } else {
+      collection[monsterIndex].quantity++;
+    }
+    return collection;
+  }, []);
+  monsterCount.forEach((monster, i) => {
+    if (monster.quantity == 1) {
+      monsterString += correctArticle(monster.name) + ' ' + monster.name;
+    } else {
+      monsterString += monster.quantity + ' ' + monster.name + 's';
+    }
+    if (i < monsterCount.length - 1) {
+      monsterString += ' and ';
+    }
+  });
   
   const turnOrder = shuffle([...monsters, ...story.fullParty]);
   let willFight = false;
@@ -27,12 +42,13 @@ module.exports = (story, generateTravel) => {
     output += `${monsterString} jumped out and attacked the party!`;
     willFight = true;
   } else {
-    output += `${turnOrder[0].name} saw ${monstersString}! ${capitalize(turnOrder[0].pronoun.subject)} `;
+    output += `${turnOrder[0].name} saw ${monsterString}! ${capitalize(turnOrder[0].pronoun.subject)} `;
 
     if (percentChance(turnOrder[0].stats.rationality)) {
       output += 'pointed it out to the others, ';
 
-      if (percentChance(story.averageBravery) || percentChance(story.averageViolence)) {
+      if ((numberOfEnemies > 4 && percentChance(story.averageRationality))
+        || percentChance(story.averageBravery) || percentChance(story.averageViolence)) {
         output += 'and they decided to eliminate the threat.'
         willFight = true;
       } else {
@@ -52,7 +68,7 @@ module.exports = (story, generateTravel) => {
         } else {
           output += ` Unfortunately, the ${monsters[0].name} spotted the party as they moved past and jumped out with an attack!`;
           const monsterIndex = turnOrder.findIndex(character => character.isEnemy);
-          turnOrder.unshift(turnOrder.splice(monsterIndex, 1));
+          turnOrder.unshift(turnOrder.splice(monsterIndex, 1)[0]);
           willFight = true;
         }
       }

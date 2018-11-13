@@ -2,7 +2,7 @@ module.exports = (damageRatio, target) => {
   let output = '';
 
   if (damageRatio <= 0.2) {
-    output += `, but it didn't hurt very much—${target.name} `;
+    output += `, but it didn't hurt very much; ${target.name} `;
     switch (target.personality) {
       default: {
         output += 'brushed off the attack like a pro.';
@@ -26,7 +26,7 @@ module.exports = (damageRatio, target) => {
       }
     }
   } else if (damageRatio > 0.2 && damageRatio <= 0.5) {
-    output += `, doing a fair amount of damage—${target.name} `;
+    output += `, doing a fair amount of damage; ${target.name} `;
     switch (target.personality) {
       default: {
         output += `tried to brush off the attack, but it was clear that ${target.pronoun.subject} felt the pain.`;

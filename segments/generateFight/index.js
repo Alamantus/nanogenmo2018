@@ -2,6 +2,7 @@ const {
   randomInt,
   percentChance,
   choose,
+  shuffle,
   capitalize,
   correctArticle,
 } = require('../../helpers');
@@ -20,48 +21,82 @@ module.exports = (turnOrder) => {
   
   while (anEnemyIsAlive() && !didLoseFight()) {
     turnOrder.forEach(character => {
+      if (character.hasOwnProperty('isDodging')) delete character.isDodging;
+
       if (character.hp <= 0 || !anEnemyIsAlive()) return;
       
       const attackObject = character.hasOwnProperty('weapon') ? character.weapon : character;
-      const damage = randomInt(attackObject.minDamage, attackObject.maxDamage);
-      
+
       const characterName = `${character.hasOwnProperty('personality') ? '' : 'The '}${character.name}`;
       const target = choose((character.isEnemy ? party : enemies).filter(thing => thing.hp > 0));
+      if (!target) {
+        output += `${characterName} got ${percentChance(50) ? 'confused' : 'distracted'} and ${percentChance(50) ? 'just stood there' : 'looked around'}. `;
+        return;
+      }
+      
       const targetName = `${target.hasOwnProperty('personality') ? '' : 'the '}${target.name}`;
 
-      output += `${capitalize(characterName)} stepped up to attack ${targetName} with `;
-      output += (character.hasOwnProperty('weapon') ? `${character.pronoun.possessive} ${character.weapon.name}` : `${correctArticle(character.attack)} ${character.attack}`) + '... ';
-        
-      if (percentChance(attackObject.accuracy)) {
-        const damageRatio = damage / target.hp;
-        target.hp -= damage;
-        
-        output += `${capitalize(characterName)} ${attackObject.verb} ${targetName}`;
+      if (character.hasOwnProperty('stats') && !percentChance(character.stats.bravery)) {
+        output += `${characterName} `;
+        output += !percentChance(character.stats.bravery) ? `lost ${character.pronoun.possessive} nerve and ran a little distance away`
+          : `took a defensive stance to try to fend off the enemy's advance`;
+        output += '. ';
+        character.isDodging = true;
+        return;
+      }
 
-        if (target.hasOwnProperty('personality')) {
-          output += reactToDamage(damageRatio, target) + ' ';
-
-          if (target.hp <= 0) {
-            die(target);
-          }
+      output += `${capitalize(characterName)} ${percentChance(50) ? (percentChance(50) ? 'stepped up' : 'ran up') : (percentChance(50) ? 'looked around and decided' : 'recklessly moved')} to attack ${targetName} with `;
+      output += (character.hasOwnProperty('weapon') ? `${character.pronoun.possessive} ${attackObject.name}` : `${correctArticle(attackObject.attack)} ${attackObject.attack}`) + '... ';
+        
+      if (target.isDodging) {
+        if (percentChance(50)) {
+          output += `But ${character.hasOwnProperty('pronoun') ? character.pronoun.subject : 'it'} couldn't hit ${targetName}! `;
         } else {
-          output += ` and the ${target.name} `;
-          if (damageRatio <= 0.2) {
-            output += 'shook its head, hurt but still ok. '
-          } else if (damageRatio > 0.2 && damageRatio <= 0.5) {
-            output += 'let out a cry of pain. '
-          } else {
-            output += 'howled in pain. '
+          output += `But ${targetName} dodged quickly and avoided ${character.hasOwnProperty('pronoun') ? character.pronoun.possessive : 'its'} ${attackObject.attack}! `;
+        }
+      } else if (percentChance(attackObject.accuracy)) {
+        const numberOfAttacks = character.hasOwnProperty('stats') && percentChance(character.stats.violence) ? 2 : 1;
+
+        for (let i = 0; i < numberOfAttacks; i++) {
+          const damage = randomInt(attackObject.minDamage, attackObject.maxDamage);
+          const damageRatio = damage / target.hp;
+          target.hp -= damage;
+          
+          output += `${capitalize(characterName)} ${attackObject.verb} ${targetName}`;
+          if (i == 1) {
+            output += percentChance(50) ? ' again' : ' a second time';
           }
 
-          if (target.hp <= 0) {
-            output += 'It let out one last cry of pain and collapsed to the ground, dead! ';
+          if (target.hasOwnProperty('personality')) {
+            output += reactToDamage(damageRatio, target) + ' ';
+
+            if (target.hp <= 0) {
+              die(target);
+            }
+          } else {
+            output += ` and the ${target.name} `;
+            if (damageRatio <= 0.2) {
+              output += 'shook its head, hurt but still ok. '
+            } else if (damageRatio > 0.2 && damageRatio <= 0.5) {
+              output += 'let out a cry of pain. '
+            } else {
+              output += 'howled in pain. '
+            }
+
+            if (target.hp <= 0) {
+              output += 'It let out one last cry of pain and collapsed to the ground, dead! ';
+            }
           }
         }
       } else {
         output += `But ${character.hasOwnProperty('pronoun') ? character.pronoun.subject : 'it'} missed! `;
       }
     });
+
+    if (percentChance(50)) {
+      turnOrder = shuffle(turnOrder);
+    }
+
     output += '\n\n';
   }
 

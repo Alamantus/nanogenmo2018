@@ -24,7 +24,7 @@ const generateTravel = (story, randomizeLocation = true) => {
     if (lastLocation.place == story.currentLocation.place) {
       output += 'Our heroes remained in'
     } else {
-      output += 'Our heroes moved on from'
+      output += 'Our heroes moved on from where they were in'
     }
   } else if (story.visited.findIndex(location => location.name == story.currentLocation.name) > -1) {
     output += 'The party returned to';

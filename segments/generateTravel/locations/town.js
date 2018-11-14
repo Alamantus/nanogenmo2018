@@ -1,5 +1,7 @@
 const {randomInt, percentChance, choose} = require('../../../helpers');
 
+const generateTavern = require('../events/tavern');
+
 module.exports = (story) => {
   let output = '';
 
@@ -12,15 +14,15 @@ module.exports = (story) => {
       break;
     }
     case 'tavern': {
-      output += 'The party stops to see some the tavern.';
+      output += generateTavern(story);
       break;
     }
     case 'well': {
-      output += 'The party stops at the well to meet some people.';
+      output += 'The party stops to meet some people and get some direction. ';
       break;
     }
     case 'inn': {
-      output += 'The party stops at the inn to get some rest for the night.';
+      output += 'The party stops at the inn to get some rest for the night. ';
       break;
     }
     case 'shop': {

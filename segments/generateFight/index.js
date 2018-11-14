@@ -26,8 +26,17 @@ module.exports = (turnOrder) => {
       if (character.hp <= 0 || !anEnemyIsAlive()) return;
       
       const attackObject = character.hasOwnProperty('weapon') ? character.weapon : character;
-
       const characterName = `${character.hasOwnProperty('personality') ? '' : 'The '}${character.name}`;
+
+      if (character.isEnemy) {
+        const runChance = (1 - (character.hp / character.maxHP)) * 100;
+        if (percentChance(runChance)) {
+          character.hp = 0;
+          output += `${characterName} ${percentChance(50) ? 'got spooked' : 'became afraid'} and ran away ${percentChance(50) ? 'to avoid dying' : 'before the party could finish it off'}! `;
+          return;
+        }
+      }
+
       const target = choose((character.isEnemy ? party : enemies).filter(thing => thing.hp > 0));
       if (!target) {
         output += `${characterName} got ${percentChance(50) ? 'confused' : 'distracted'} and ${percentChance(50) ? 'just stood there' : 'looked around'}. `;

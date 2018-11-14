@@ -1,6 +1,7 @@
 module.exports = [
     {
         name: 'slime',
+        maxHP: 5,
         hp: 5,
         attack: 'tackle',
         verb: 'slimed',
@@ -10,6 +11,7 @@ module.exports = [
     },
     {
         name: 'spider',
+        maxHP: 7,
         hp: 7,
         attack: 'bite',
         verb: 'bit',
@@ -19,6 +21,7 @@ module.exports = [
     },
     {
         name: 'wolf',
+        maxHP: 10,
         hp: 10,
         attack: 'growl',
         verb: 'bit',
@@ -28,6 +31,7 @@ module.exports = [
     },
     {
         name: 'imp',
+        maxHP: 15,
         hp: 15,
         attack: 'poke',
         verb: 'poked',
@@ -37,6 +41,7 @@ module.exports = [
     },
     {
         name: 'bear',
+        maxHP: 20,
         hp: 20,
         attack: 'roar',
         verb: 'mauled',
@@ -46,6 +51,7 @@ module.exports = [
     },
     {
         name: 'ogre',
+        maxHP: 30,
         hp: 30,
         attack: 'throw',
         verb: 'threw',
@@ -55,6 +61,7 @@ module.exports = [
     },
     {
         name: 'troll',
+        maxHP: 40,
         hp: 40,
         attack: 'club',
         verb: 'battered',

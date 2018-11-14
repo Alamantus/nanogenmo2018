@@ -1,8 +1,7 @@
 const {percentChance, choose} = require('../../helpers');
 
-const generateWalk = require('./generateWalk');
-const generateExplore = require('./generateExplore');
-const generateRest = require('./generateRest');
+const encounter = require('./events/encounter');
+const generateTown = require('./locations/town');
 
 const generateTravel = (story, randomizeLocation = true) => {
   let output = '';
@@ -37,19 +36,40 @@ const generateTravel = (story, randomizeLocation = true) => {
     default:
     case 'walked through': {
       output += ', trying to make their way through.\n\n';
-      output += generateWalk(story, generateTravel);
       break;
     }
-    // case 'explored': {
-    //   output += ', seeing what they could find.\n\n';
-    //   output += generateExplore(story);
-    //   break;
-    // }
-    // case 'rested at': {
-    //   output += ', recovering from all the walking they had done.\n\n';
-    //   output += generateRest(story);
-    //   break;
-    // }
+    case 'explored': {
+      output += ', seeing what they could find.\n\n';
+      break;
+    }
+    case 'rested at': {
+      output += ', recovering from all the walking they had done.\n\n';
+      break;
+    }
+  }
+
+  switch (story.currentLocation.type) {
+    default: {
+      switch (story.currentLocation.place.type) {
+        default: {
+          // if (!percentChance(averageLuck)) {
+          output += encounter(action, story, generateTravel);
+          // }
+
+          break;
+        }
+      }
+      break;
+    }
+    case 'town': {
+      const doStop = action == 'walked through' ? percentChance(50) : true;
+      if (doStop) {
+        output += generateTown(story);
+      } else {
+        output += 'Not wanting to stop, they continued onward. ';
+      }
+      break;
+    }
   }
 
   return output;

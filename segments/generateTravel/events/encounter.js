@@ -3,7 +3,7 @@ const allMonsters = require('../../../data/monsters');
 
 const generateFight = require('../../generateFight');
 
-module.exports = (story, generateTravel) => {
+module.exports = (action, story, generateTravel) => {
   let output = '';
 
   const monsters = [];
@@ -36,7 +36,22 @@ module.exports = (story, generateTravel) => {
   const turnOrder = shuffle([...monsters, ...story.fullParty]);
   let willFight = false;
 
-  output += `As they were walking, `;
+  output += 'As they were ';
+  switch (action) {
+    case 'walking through': {
+      output += 'walking';
+      break;
+    }
+    case 'explored': {
+      output += 'exploring';
+      break;
+    }
+    case 'rested at': {
+      output += 'resting';
+      break;
+    }
+  }
+  output += ', ';
 
   if (turnOrder[0].isEnemy) {
     output += `${monsterString} jumped out and attacked the party!`;

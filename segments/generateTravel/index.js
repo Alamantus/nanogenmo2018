@@ -1,4 +1,4 @@
-const {percentChance, choose} = require('../../helpers');
+const {percentChance, choose, correctArticle} = require('../../helpers');
 
 const encounter = require('./events/encounter');
 const generateTown = require('./locations/town');
@@ -9,7 +9,7 @@ const generateTravel = (story, randomizeLocation = true) => {
   story.visited.push({
     name: story.currentLocation.name,
     type: story.currentLocation.type,
-    place: story.currentLocation.place,
+    place: Object.assign({}, story.currentLocation.place),
   });
   const lastLocation = story.visited[story.visited.length - 1];
 
@@ -23,6 +23,8 @@ const generateTravel = (story, randomizeLocation = true) => {
   if (lastLocation.name == story.currentLocation.name) {
     if (lastLocation.place == story.currentLocation.place) {
       output += 'Our heroes remained in'
+    } else {
+      output += 'Our heroes moved on from'
     }
   } else if (story.visited.findIndex(location => location.name == story.currentLocation.name) > -1) {
     output += 'The party returned to';
@@ -30,7 +32,7 @@ const generateTravel = (story, randomizeLocation = true) => {
     output += 'Our heroes ' + action;
   }
 
-  output += ` the ${story.currentLocation.specifier}. They were ${story.currentLocation.place.preposition} the ${story.currentLocation.place.type} called "${story.currentLocation.place.name}"`;
+  output += ` the ${story.currentLocation.specifier}, ${correctArticle(story.currentLocation.size)} ${story.currentLocation.size} and ${story.currentLocation.description} place with ${story.currentLocation.feature}. They were ${story.currentLocation.place.preposition} the ${story.currentLocation.place.type} called "${story.currentLocation.place.name}"`;
 
   switch (action) {
     default:
@@ -49,24 +51,32 @@ const generateTravel = (story, randomizeLocation = true) => {
   }
 
   switch (story.currentLocation.type) {
-    default: {
+    default:
+    case 'path':
+    case 'forest':
+    case 'mountain': {
       switch (story.currentLocation.place.type) {
         default: {
-          // if (!percentChance(averageLuck)) {
-          output += encounter(action, story, generateTravel);
-          // }
+          if (!percentChance(story.averageLuck)) {
+            output += encounter(action, story, generateTravel);
+          } else {
+            output += 'Not encountering anything interesting, the party continues onward. ';
+            output += generateTravel(story);
+          }
 
           break;
         }
       }
       break;
     }
-    case 'town': {
+    case 'town':
+    case 'city': {
       const doStop = action == 'walked through' ? percentChance(50) : true;
       if (doStop) {
         output += generateTown(story);
       } else {
         output += 'Not wanting to stop, they continued onward. ';
+        output += generateTravel(story);
       }
       break;
     }

@@ -38,7 +38,7 @@ module.exports = (action, story, generateTravel) => {
 
   output += 'As they were ';
   switch (action) {
-    case 'walking through': {
+    case 'walked through': {
       output += 'walking';
       break;
     }

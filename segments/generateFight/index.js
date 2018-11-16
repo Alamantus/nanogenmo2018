@@ -57,13 +57,22 @@ module.exports = (turnOrder) => {
       output += `${capitalize(characterName)} ${percentChance(50) ? (percentChance(50) ? 'stepped up' : 'ran up') : (percentChance(50) ? 'looked around and decided' : 'recklessly moved')} to attack ${targetName} with `;
       output += (character.hasOwnProperty('weapon') ? `${character.pronoun.possessive} ${attackObject.name}` : `${correctArticle(attackObject.attack)} ${attackObject.attack}`) + '... ';
         
+      let canHit = true;
       if (target.isDodging) {
         if (percentChance(50)) {
-          output += `But ${character.hasOwnProperty('pronoun') ? character.pronoun.subject : 'it'} couldn't hit ${targetName}! `;
+          if (percentChance(50)) {
+            output += `But ${character.hasOwnProperty('pronoun') ? character.pronoun.subject : 'it'} couldn't hit ${targetName}! `;
+            canHit = false;
+          } else {
+            output += `${targetName} tried to dodge, but ${characterName} was too fast! `;
+          }
         } else {
           output += `But ${targetName} dodged quickly and avoided ${character.hasOwnProperty('pronoun') ? character.pronoun.possessive : 'its'} ${attackObject.attack}! `;
+          canHit = false;
         }
-      } else if (percentChance(attackObject.accuracy)) {
+      }
+      
+      if (canHit && percentChance(attackObject.accuracy)) {
         const numberOfAttacks = character.hasOwnProperty('stats') && percentChance(character.stats.violence) ? 2 : 1;
 
         for (let i = 0; i < numberOfAttacks; i++) {
@@ -97,7 +106,7 @@ module.exports = (turnOrder) => {
             }
           }
         }
-      } else {
+      } else if (canHit) {
         output += `But ${character.hasOwnProperty('pronoun') ? character.pronoun.subject : 'it'} missed! `;
       }
     });

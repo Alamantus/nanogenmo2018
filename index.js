@@ -50,6 +50,14 @@ class Story {
         return this.fullParty.reduce((total, member) => total += member.stats.rationality, 0) / this.fullParty.length;
     }
 
+    get averageMaxHP () {
+        return this.fullParty.reduce((total, member) => total += member.maxHP, 0) / this.fullParty.length;
+    }
+
+    get averageHP () {
+        return this.fullParty.reduce((total, member) => total += member.hp, 0) / this.fullParty.length;
+    }
+
     generateParty () {
         const party = [];
         const number = randomInt(2, 4);

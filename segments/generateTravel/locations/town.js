@@ -6,13 +6,8 @@ module.exports = (story) => {
   let output = '';
 
   switch (story.currentLocation.place.type) {
-    default: {
-      // if (!percentChance(averageLuck)) {
-      output += JSON.stringify(story.currentLocation.place);
-      // }
-
-      break;
-    }
+    default:
+    case 'bar':
     case 'tavern': {
       output += generateTavern(story);
       break;

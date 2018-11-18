@@ -7,11 +7,15 @@ const randomInt = (min = 0, max = 1) => {
 }
 
 const choose = (array) => {
-    return array[randomInt(0, array.length - 1)];
+    let choice;
+    while (choice == undefined) {
+        choice = array[randomInt(0, array.length - 1)];
+    }
+    return choice;
 }
 
 const shuffle = (array) => {
-    return array.sort(() => Math.random() - 0.5);
+    return array.slice().sort(() => Math.random() - 0.5);
 }
 
 const percentChance = (percent) => {

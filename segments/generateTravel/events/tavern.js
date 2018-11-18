@@ -2,6 +2,7 @@ const {randomInt, percentChance, choose, shuffle, capitalizeWords, correctArticl
 const wordCollection = require('../../../data/words');
 
 const generateFight = require('../../generateFight');
+const generateGame = require('../../generateGame');
 const Character = require('../../../classes/Character');
 
 module.exports = (story) => {
@@ -103,7 +104,6 @@ module.exports = (story) => {
     const action = choose(['drink', 'play']);
 
     switch (action) {
-      default:
       case 'drink': {
         const drinkAmount = percentChance(50) ? 'little' : 'lot'
         output += `${character.name} ${drinkAmount == 'little' ? 'felt thirsty' : 'wanted to get drunk'} and approached the bar, saying, "`;
@@ -138,7 +138,7 @@ module.exports = (story) => {
           output += `The ${drinkName} turned out to be too much for ${character.pronoun.object}, and ${character.pronoun.subject} got drunk as ${character.pronoun.subject} continued drinking. `
           if (!percentChance(character.stats.rationality)) {
             if (numberOfPeople > 0) {
-              const targetIndex = randomInt(0, people.length);
+              const targetIndex = randomInt(0, people.length - 1);
               const target = people[targetIndex];
               target.isEnemy = true;
               output += `${capitalizeWords(character.pronoun.subject)} looked over and saw ${target.describe()}. ${character.name} walked over to pick a fight.`;
@@ -155,12 +155,16 @@ module.exports = (story) => {
         break;
       }
       case 'play': {
+        const gameType = choose(['conquer', 'splits', 'sets', 'overpower']);
+        const gameTool = ['conquer', 'splits'].includes(gameType) ? 'deck of cards' : 'set of dice';
         if (numberOfPeople > 0) {
           const target = choose(people);
-          output += `${character.name} noticed ${target.describe()} sitting at a table with a deck of cards. ${character.name} walked over to request a game.`;
-          output += `\n\n"${target.introduce()} Sit down and I'll deal you in," ${target.name} smirked.`;
+          output += `${character.name} noticed ${target.describe()} sitting at a table with a ${gameTool}. ${character.name} walked over to request a game.`;
+          output += `\n\n"${target.introduce()} Sit down and we can get started," ${target.name} smirked, "We're playing ${capitalizeWords(gameType)}."`
+          output += '\n\n' + generateGame([character, target], gameType);
         } else {
-          output += `${character.name} found a deck of cards and played a game of soliaire by ${character.pronoun.object}self. `
+          output += `${character.name} found a ${gameTool} and played a game of soliaire by ${character.pronoun.object}self. `
+          output += '\n\n' + generateGame([character], gameType);
         }
         break;
       }

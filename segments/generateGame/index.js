@@ -1,5 +1,7 @@
 const {randomInt, percentChance, choose, shuffle} = require('../../helpers');
 
+const reactToTurn = require('./reactToTurn');
+
 const suits = ['swords', 'shields', 'stars'];
 const cards = [];
 for (let i = 1; i <= 5; i++) {
@@ -67,7 +69,8 @@ module.exports = (players, gameType = 'conquer') => {
             const target = choose(players.filter(person => person.fullName != player.fullName));
             output += `${player.name} chose ${target.name} to compare cards, and they both drew their next cards: `;
             output += `${player.name} revealed a ${cardName(player.hand[0])} and ${target.name} flipped a ${cardName(target.hand[0])}, so `;
-            if (compareCards(player, target) < 0) {
+            const playerWon = compareCards(player, target) < 0;
+            if (playerWon) {
               output += player.name;
               player.hand.push(player.hand.splice(0, 1)[0], target.hand.splice(0, 1)[0]);
             } else {
@@ -75,12 +78,23 @@ module.exports = (players, gameType = 'conquer') => {
               target.hand.push(player.hand.splice(0, 1)[0], target.hand.splice(0, 1)[0]);
             }
             output += ' took both cards. ';
+
+            if (percentChance(30)) {
+              if (percentChance(50)) {
+                output += '\n\n' + reactToTurn(player, playerWon ? 'good' : 'bad') + '\n\n';
+              } else {
+                if (target.hasOwnProperty('personality')) {
+                  output += '\n\n' + reactToTurn(target, playerWon ? 'bad' : 'good') + '\n\n';
+                }
+              }
+            }
           });
         } else {
           const player = players[0];
           const target = players[1];
           output += `${player.name} revealed a ${cardName(player.hand[0])} and ${target.name} flipped a ${cardName(target.hand[0])}, so `;
-          if (compareCards(player, target) < 0) {
+          const playerWon = compareCards(player, target) < 0;
+          if (playerWon) {
             output += player.name;
             player.hand.push(player.hand.splice(0, 1)[0], target.hand.splice(0, 1)[0]);
           } else {
@@ -88,6 +102,16 @@ module.exports = (players, gameType = 'conquer') => {
             target.hand.push(player.hand.splice(0, 1)[0], target.hand.splice(0, 1)[0]);
           }
           output += ' took both cards. ';
+
+          if (percentChance(30)) {
+            if (percentChance(50)) {
+              output += '\n\n' + reactToTurn(player, playerWon ? 'good' : 'bad') + '\n\n';
+            } else {
+              if (target.hasOwnProperty('personality')) {
+                output += '\n\n' + reactToTurn(target, playerWon ? 'bad' : 'good') + '\n\n';
+              }
+            }
+          }
         }
         
         rounds++;

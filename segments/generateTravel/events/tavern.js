@@ -138,12 +138,14 @@ module.exports = (story) => {
           output += `The ${drinkName} turned out to be too much for ${character.pronoun.object}, and ${character.pronoun.subject} got drunk as ${character.pronoun.subject} continued drinking. `
           if (!percentChance(character.stats.rationality)) {
             if (numberOfPeople > 0) {
-              const target = choose(people);
+              const targetIndex = randomInt(0, people.length);
+              const target = people[targetIndex];
               target.isEnemy = true;
               output += `${capitalizeWords(character.pronoun.subject)} looked over and saw ${target.describe()}. ${character.name} walked over to pick a fight.`;
               output += `\n\n"${character.introduce()} I am a ${character.weaponExperience} of the ${character.weapon.name}, and I think we should fight!" ${character.name} boasted.`;
               output += `\n\n"Well, ${target.introduce()} And I am a ${target.weaponExperience} of the ${target.weapon.name}, and I accept your challenge!" ${character.name} retorted.`;
               output += '\n\n' + generateFight([character, target]);
+              people.splice(targetIndex, 1);
             } else {
               output += `After some time, ${character.pronoun.subject} ${percentChance(character.stats.luck) ? '' : 'threw up and '}${percentChance(50) ? 'passed out' : 'fell asleep'} on the bar.`;
             }
@@ -152,9 +154,16 @@ module.exports = (story) => {
 
         break;
       }
-      // case 'play': {
-      //   break;
-      // }
+      case 'play': {
+        if (numberOfPeople > 0) {
+          const target = choose(people);
+          output += `${character.name} noticed ${target.describe()} sitting at a table with a deck of cards. ${character.name} walked over to request a game.`;
+          output += `\n\n"${target.introduce()} Sit down and I'll deal you in," ${target.name} smirked.`;
+        } else {
+          output += `${character.name} found a deck of cards and played a game of soliaire by ${character.pronoun.object}self. `
+        }
+        break;
+      }
     }
     output += '\n\n';
   });

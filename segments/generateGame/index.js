@@ -1,6 +1,7 @@
 const {choose} = require('../../helpers');
 
 const conquer = require('./conquer');
+const splits = require('./splits');
 
 module.exports = (players, gameType = 'conquer') => {
   let output = choose(players).name + ' ';
@@ -26,8 +27,12 @@ module.exports = (players, gameType = 'conquer') => {
 
   switch (gameType) {
     default: 
-    case 'conquer': {
-      output += conquer(players, isSolitaire);
+    // case 'conquer': {
+    //   output += conquer(players, isSolitaire);
+    //   break;
+    // }
+    case 'splits': {
+      output += splits(players, isSolitaire);
       break;
     }
   }

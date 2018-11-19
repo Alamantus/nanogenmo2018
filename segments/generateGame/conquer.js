@@ -1,6 +1,6 @@
 const {percentChance, choose, shuffle} = require('../../helpers');
 
-const {suits, cards, cardName, compareCards} = require('./cards');
+const {cards, cardName, compareCards} = require('./cards');
 const reactToTurn = require('./reactToTurn');
 
 module.exports = (players, isSolitaire) => {

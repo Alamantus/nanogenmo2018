@@ -10,7 +10,8 @@ const cardName = card => `${card.value} of ${card.suit}`;
 // -1 means aCard is better than bCard, 1 means bCard is better than aCard
 const compareCards = (aCard, bCard) => {
   if (aCard.value == bCard.value) {
-    return suits.indexOf(aCard.suit) > suits.indexOf(bCard.suit) ? -1 : 1;
+    return (suits.indexOf(aCard.suit) == 0 && suits.indexOf(bCard.suit) == 2)
+      || suits.indexOf(aCard.suit) > suits.indexOf(bCard.suit) ? -1 : 1;
   }
   return (aCard.value == 1 && bCard.value == 10) || aCard.value > bCard.value ? -1 : 1;
 }

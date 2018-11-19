@@ -163,8 +163,8 @@ module.exports = (story) => {
           output += `\n\n"${target.introduce()} Sit down and we can get started," ${target.name} smirked, "We're playing ${capitalizeWords(gameType)}."`
           output += '\n\n' + generateGame([character, target], gameType);
         } else {
-          output += `${character.name} found a ${gameTool} and played a game of soliaire by ${character.pronoun.object}self. `
-          output += '\n\n' + generateGame([character], gameType);
+          output += `${character.name} found a ${gameTool} and played a game of ${capitalizeWords(gameType)} by ${character.pronoun.object}self. `
+          output += generateGame([character], gameType);
         }
         break;
       }

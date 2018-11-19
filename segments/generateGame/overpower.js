@@ -18,7 +18,7 @@ module.exports = (players, isSolitaire) => {
     const currentPlayer = players[currentPlayerIndex];
     currentRoll = randomInt(1, 6);
 
-    output += `${currentPlayer.name} rolled ${currentRoll}, `;
+    output += `${currentPlayer.name} rolled a ${currentRoll}, `;
     
     if (currentRoll > lastRoll || (currentRoll == 1 && lastRoll == 6)) {
       output += `which beat the previously-rolled ${lastRoll}${percentChance(50) ? ', allowing the game to continue' : ''}. `;
@@ -28,7 +28,7 @@ module.exports = (players, isSolitaire) => {
       output += `which did not beat the previously-rolled ${lastRoll}, `
       if (isSolitaire) {
         continuePlaying = false;
-        output += `ending ${currentPlayer.name}'s game. `
+        output += `ending ${currentPlayer.name}'s game.`
       } else {
         output += `knocking ${currentPlayer.name} out of the game! `
         players.splice(currentPlayerIndex, 1);
@@ -39,7 +39,7 @@ module.exports = (players, isSolitaire) => {
   }
 
   if (!isSolitaire) {
-    output += `Which means that ${players[0].name} won the game! `
+    output += `Which means that ${players[0].name} won the game!`
   }
   
   return output;

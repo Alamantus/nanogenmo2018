@@ -93,7 +93,7 @@ module.exports = (players, isSolitaire) => {
         winner = player;
       }
     });
-    output += `Play continued until ${isSolitaire && winner.name != players[0].name ? players[0] + ' eventually lost' : winner.name + ' finally won'}.`
+    output += `Play continued until ${isSolitaire && winner.name != players[0].name ? players[0].name + ' eventually lost' : winner.name + ' finally won'}.`
   } else {
     winner = players.find(player => player.hand.length == cards.length);
     output += `${winner.name} won the game! `;

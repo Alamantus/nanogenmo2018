@@ -1,4 +1,4 @@
-const {percentChance, choose, shuffle} = require('../../helpers');
+const {percentChance, capitalize, shuffle} = require('../../helpers');
 
 const {suits, cards, cardName, compareCards} = require('./cards');
 const reactToTurn = require('./reactToTurn');
@@ -47,18 +47,23 @@ module.exports = (players, isSolitaire) => {
   players.forEach(player => {
     player.points = checkPoints(player.hand);
 
-    output += `${player.name} `;
+    output += `${capitalize(player.name)} `;
     if (!isSolitaire && player.points == 0) {
       player.hand.sort(compareCards).reverse();
 
-      output += `looked at their cards, thought for a moment, and discarded their ${cardName(player.hand[0])} to draw a new one, and `;
+      output += `looked at ${player.pronoun.possessive} cards, thought for a moment, and discarded ${player.pronoun.possessive} ${cardName(player.hand[0])} to draw a new one, and `;
       
       deck.push(player.hand.splice(0, 1)[0]);
       player.hand.push(deck.splice(0, 1)[0]);
       player.points = checkPoints(player.hand);
     }
 
-    output += `laid down their cards: ${player.hand.map(card => `the ${cardName(card)}`).join(' and ')}. `;
+    if (!isSolitaire) {
+      output += `laid down ${player.pronoun.possessive} cards: `;
+    } else {
+      output += `ended up having these cards: `;
+    }
+    output += `${player.hand.map(card => `the ${cardName(card)}`).join(' and ')}. `;
     
     if (!points.hasOwnProperty(player.points.toString())) {
       points[player.points.toString()] = [];
@@ -80,7 +85,13 @@ module.exports = (players, isSolitaire) => {
     const winnerString = winner.map(player => player.name).join(' and ');
     output += `${percentChance(50) ? 'It' : 'Which means it'} was a ${winner.length > 2 ? winner.length + '-way tie split among' : 'tie between'} ${winnerString}!`;
   } else {
-    output += `${percentChance(50) ? 'So' : 'Which means'} ${winner[0].name} won!`
+    output += `${percentChance(50) ? 'So' : 'Which means'} `;
+    
+    if (isSolitaire && winner[0].name != players[0].name) {
+      output += `${players[0].name} lost!`;
+    } else {
+      output += `${winner[0].name} won!`;
+    }
   }
   
   return output;

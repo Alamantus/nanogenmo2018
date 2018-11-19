@@ -10,7 +10,7 @@ module.exports = (players, gameType = 'conquer') => {
   players = players.map(player => Object.assign({ hand: [] }, player));
 
   const isSolitaire = players.length == 1;
-  if (isSolitaire) {
+  if (isSolitaire && gameType != 'overpower') {
     players.push({hand: []});
   }
   
@@ -21,7 +21,7 @@ module.exports = (players, gameType = 'conquer') => {
       }
     } else {
       output += 'gathered up the dice into the cup. ';
-      if (isSolitaire) {
+      if (isSolitaire && gameType != 'overpower') {
         players[1].name = 'the challenge roll';
       }
   }
@@ -31,6 +31,7 @@ module.exports = (players, gameType = 'conquer') => {
       output += conquer(players, isSolitaire);
       break;
     }
+    default:
     case 'splits': {
       output += splits(players, isSolitaire);
       break;
@@ -39,7 +40,6 @@ module.exports = (players, gameType = 'conquer') => {
     //   output += sets(players, isSolitaire);
     //   break;
     // }
-    default:
     case 'overpower': {
       output += overpower(players, isSolitaire);
       break;

@@ -40,6 +40,10 @@ module.exports = [
                 preposition: 'in',
             },
             {
+                type: 'inn',
+                preposition: 'at',
+            },
+            {
                 type: 'armory',
                 preposition: 'at',
             },

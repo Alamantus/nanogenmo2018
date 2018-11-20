@@ -19,7 +19,11 @@ module.exports = (turnOrder) => {
   const anEnemyIsAlive = () => enemies.some(enemy => enemy.hp > 0);
   const didLoseFight = () => party.every(member => member.hp <= 0);
   
-  while (anEnemyIsAlive() && !didLoseFight()) {
+  const maxTurns = 50;
+  let turns = 0;
+  
+  while (anEnemyIsAlive() && !didLoseFight() && turns < maxTurns) {
+    turns++;
     turnOrder.forEach(character => {
       if (character.hasOwnProperty('isDodging')) delete character.isDodging;
 
@@ -117,8 +121,10 @@ module.exports = (turnOrder) => {
 
     output += '\n\n';
   }
-
-  if (didLoseFight()) {
+  
+  const didLose = didLoseFight() || turns >= maxTurns;
+  
+  if (didLose) {
     output += 'The party pulled itself together and ran away before they could get battered any more than they already had been!';
   } else {
     output += 'The party gathered itself together in victory, continuing their trek onward.';

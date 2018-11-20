@@ -8,10 +8,12 @@ const randomInt = (min = 0, max = 1) => {
 
 const choose = (array) => {
     let choice;
-    while (choice == undefined) {
+    let tries = 0;
+    while (choice == undefined && tries < 10) {
         choice = array[randomInt(0, array.length - 1)];
+        tries++;
     }
-    return choice;
+    return (choice == undefined) ? array[0] : choice;
 }
 
 const shuffle = (array) => {

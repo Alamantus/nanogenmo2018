@@ -13,6 +13,7 @@ module.exports = class Character {
     constructor(type = 'good', {
         race,
         knowsProtagonist,
+        maxHP,
     } = {}) {
         this.type = type;
         
@@ -49,7 +50,7 @@ module.exports = class Character {
 
         this.personality = choose(['neutral', 'sweet', 'kind', 'mean', 'salty']);
 
-        this.maxHP = randomInt(20, 50);
+        this.maxHP = maxHP ? maxHP : randomInt(20, 50);
         this.hp = this.maxHP;
         this.stats = {
             bravery: randomInt(25, 75),

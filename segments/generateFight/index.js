@@ -10,7 +10,7 @@ const {
 const reactToDamage = require('./reactToDamage');
 const die = require('./die');
 
-module.exports = (turnOrder) => {
+module.exports = (turnOrder, {limitTurns = true} = {}) => {
   let output = '';
 
   const party = turnOrder.filter(character => !character.isEnemy);
@@ -19,7 +19,7 @@ module.exports = (turnOrder) => {
   const anEnemyIsAlive = () => enemies.some(enemy => enemy.hp > 0);
   const didLoseFight = () => party.every(member => member.hp <= 0);
   
-  const maxTurns = 50;
+  const maxTurns = limitTurns ? 50 : 999;
   let turns = 0;
   
   while (anEnemyIsAlive() && !didLoseFight() && turns < maxTurns) {
@@ -30,27 +30,27 @@ module.exports = (turnOrder) => {
       if (character.hp <= 0 || !anEnemyIsAlive()) return;
       
       const attackObject = character.hasOwnProperty('weapon') ? character.weapon : character;
-      const characterName = `${character.hasOwnProperty('personality') ? '' : 'The '}${character.name}`;
+      const characterName = `${character.hasOwnProperty('personality') ? '' : 'the '}${character.name}`;
 
       if (character.isEnemy) {
         const runChance = (1 - (character.hp / character.maxHP)) * 100;
         if (percentChance(runChance)) {
           character.hp = 0;
-          output += `${characterName} ${percentChance(50) ? 'got spooked' : 'became afraid'} and ran away ${percentChance(50) ? 'to avoid dying' : 'before the party could finish it off'}! `;
+          output += `${capitalize(characterName)} ${percentChance(50) ? 'got spooked' : 'became afraid'} and ran away ${percentChance(50) ? 'to avoid dying' : 'before the party could finish it off'}! `;
           return;
         }
       }
 
       const target = choose((character.isEnemy ? party : enemies).filter(thing => thing.hp > 0));
       if (!target) {
-        output += `${characterName} got ${percentChance(50) ? 'confused' : 'distracted'} and ${percentChance(50) ? 'just stood there' : 'looked around'}. `;
+        output += `${capitalize(characterName)} got ${percentChance(50) ? 'confused' : 'distracted'} and ${percentChance(50) ? 'just stood there' : 'looked around'}. `;
         return;
       }
       
       const targetName = `${target.hasOwnProperty('personality') ? '' : 'the '}${target.name}`;
 
       if (character.hasOwnProperty('stats') && !percentChance(character.stats.bravery)) {
-        output += `${characterName} `;
+        output += `${capitalize(characterName)} `;
         output += !percentChance(character.stats.bravery) ? `lost ${character.pronoun.possessive} nerve and ran a little distance away`
           : `took a defensive stance to try to fend off the enemy's advance`;
         output += '. ';
@@ -68,7 +68,7 @@ module.exports = (turnOrder) => {
             output += `But ${character.hasOwnProperty('pronoun') ? character.pronoun.subject : 'it'} couldn't hit ${targetName}! `;
             canHit = false;
           } else {
-            output += `${targetName} tried to dodge, but ${characterName} was too fast! `;
+            output += `${capitalize(targetName)} tried to dodge, but ${characterName} was too fast! `;
           }
         } else {
           output += `But ${targetName} dodged quickly and avoided ${character.hasOwnProperty('pronoun') ? character.pronoun.possessive : 'its'} ${attackObject.attack}! `;
@@ -96,7 +96,7 @@ module.exports = (turnOrder) => {
               die(target);
             }
           } else {
-            output += ` and the ${target.name} `;
+            output += ` and ${targetName} `;
             if (damageRatio <= 0.2) {
               output += 'shook its head, hurt but still ok. '
             } else if (damageRatio > 0.2 && damageRatio <= 0.5) {

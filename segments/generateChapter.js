@@ -1,6 +1,7 @@
 const {randomInt, percentChance, choose, capitalize} = require('../helpers');
 const generateIntro = require('./generateIntro');
 const generateTravel = require('./generateTravel');
+const generateEnding = require('./generateEnding');
 
 module.exports = (story, isEnding = false) => {
     const quoteRace = choose(global.races);
@@ -33,9 +34,10 @@ module.exports = (story, isEnding = false) => {
             output += generateIntro(story);
             break;
         }
-        // case 'ending': {
-        //     break;
-        // }
+        case 'ending': {
+            output += generateEnding(story);
+            break;
+        }
     }
 
     story.chapterNumber++;

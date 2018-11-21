@@ -67,8 +67,15 @@ class Story {
         return party;
     }
 
-    healParty () {
-        story.fullParty.forEach(character => character.hp = character.maxHP);
+    healParty (amount) {
+        story.fullParty.forEach(character => {
+            if (!amount) {
+                character.hp = character.maxHP;
+            } else {
+                character.hp += amount;
+                if (character.hp > maxHP) character.hp = character.maxHP;
+            }
+        });
     }
 
     generateLocations () {

@@ -51,22 +51,31 @@ module.exports = (story) => {
         }
     }
 
+    if (story.averageHP < (story.averageMaxHP / 2)) {
+        output += `Our heroes were tired after their fights, so they decided to sit and rest in a secluded area to recover before storming the ${enemyBuilding}. `;
+        const healer = choose(story.fullParty);
+        const healAmount = randomInt(story.averageMaxHP / 2, story.averageMaxHP);
+        const healFeeling = (story.averageMaxHP + (story.averageMaxHP / 2)) / 2 >= healAmount ? 'a lot' : 'a little bit';
+        output += `${healer.name} ${choose(['passed around some food', 'said a prayer', 'led the party in meditation', 'did some breathing exercises with the others'])}, and the party felt ${healFeeling} better.`
+        story.healParty(healAmount);
+    }
+
     const obstacle = choose([/* 'puzzle', 'lock',  */'guard']);
     output += `\n\nWhen they finally reached the entrance of the ${enemyBuilding}, they were met with a ${obstacle}: `;
     switch (obstacle) {
         default:
         case 'guard': {
             const guard = percentChance(50) ? new Character('bad') : Object.assign({}, choose(monsters));
-            guard.hp = randomInt(30, 50);
+            guard.hp = randomInt(40, 60);
             if (guard.hasOwnProperty('maxHP')) guard.maxHP = guard.hp;
             if (guard.hasOwnProperty('weapon')) {
-                guard.weapon.minDamage *= 2;
-                guard.weapon.maxDamage *= 2;
+                guard.weapon.minDamage *= story.fullParty.length;
+                guard.weapon.maxDamage *= story.fullParty.length;
                 guard.weapon.accuracy += 15;
                 guard.weapon.name = `${choose(['wicked', 'evil', 'giant, bloody', 'horrible'])} ${guard.weapon.name}`;
             } else {
-                guard.minDamage *= 2;
-                guard.maxDamage *= 2;
+                guard.minDamage *= story.fullParty.length;
+                guard.maxDamage *= story.fullParty.length;
                 guard.accuracy += 30;
                 guard.attack = `${choose(['terrible', 'horrifying', 'wicked', 'nasty', 'terrifying', 'evil'])} ${guard.attack}`;
             }

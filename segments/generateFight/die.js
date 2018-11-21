@@ -1,7 +1,9 @@
+const {capitalize} = require('../../helpers');
+
 module.exports = (target) => {
   let output = '';
 
-  output += ` ${target.name} succumbed to the pain`;
+  output += `${capitalize(target.name)} succumbed to the pain`;
   switch (target.personality) {
     default: {
       output += ` and fell to ${target.pronoun.possessive} knees.`;

@@ -1,3 +1,5 @@
+const {capitalize} = require('../../helpers');
+
 module.exports = (damageRatio, target) => {
   let output = '';
 
@@ -50,7 +52,7 @@ module.exports = (damageRatio, target) => {
       }
     }
   } else {
-    output += `, and dealt some serious damage! ${target.name} `;
+    output += `, and dealt some serious damage! ${capitalize(target.name)} `;
     switch (target.personality) {
       default: {
         output += `could not hide ${target.pronoun.possessive} intense pain.`;

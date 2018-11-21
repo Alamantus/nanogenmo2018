@@ -160,6 +160,7 @@ class Story {
         // Generate an ending first and subtract its words from 50000
         const ending = generateChapter(this, true);
         const requiredWords = 50000 - this.countWords(ending);
+        this.healParty();
 
         while(this.numberOfWords < requiredWords) {
             output += '\n--------------------\n\n' + generateChapter(this);

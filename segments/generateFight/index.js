@@ -10,7 +10,7 @@ const {
 const reactToDamage = require('./reactToDamage');
 const die = require('./die');
 
-module.exports = (turnOrder, {limitTurns = true} = {}) => {
+module.exports = (turnOrder, {limitTurns = true, canRun = true, winText, loseText} = {}) => {
   let output = '';
 
   const party = turnOrder.filter(character => !character.isEnemy);
@@ -34,9 +34,9 @@ module.exports = (turnOrder, {limitTurns = true} = {}) => {
 
       if (character.isEnemy) {
         const runChance = (1 - (character.hp / character.maxHP)) * 100;
-        if (percentChance(runChance)) {
+        if (canRun && percentChance(runChance)) {
           character.hp = 0;
-          output += `${capitalize(characterName)} ${percentChance(50) ? 'got spooked' : 'became afraid'} and ran away ${percentChance(50) ? 'to avoid dying' : 'before the party could finish it off'}! `;
+          output += `${capitalize(characterName)} ${percentChance(50) ? 'got spooked' : 'became afraid'} and ran away ${percentChance(50) ? 'to avoid dying' : `before the party could finish ${character.hasOwnProperty('personality') ? character.pronoun.object : 'it'} off`}! `;
           return;
         }
       }
@@ -80,33 +80,35 @@ module.exports = (turnOrder, {limitTurns = true} = {}) => {
         const numberOfAttacks = character.hasOwnProperty('stats') && percentChance(character.stats.violence) ? 2 : 1;
 
         for (let i = 0; i < numberOfAttacks; i++) {
-          const damage = randomInt(attackObject.minDamage, attackObject.maxDamage);
-          const damageRatio = damage / target.hp;
-          target.hp -= damage;
-          
-          output += `${capitalize(characterName)} ${attackObject.verb} ${targetName}`;
-          if (i == 1) {
-            output += percentChance(50) ? ' again' : ' a second time';
-          }
-
-          if (target.hasOwnProperty('personality')) {
-            output += reactToDamage(damageRatio, target) + ' ';
-
-            if (target.hp <= 0) {
-              die(target);
+          if (target.hp > 0) {
+            const damage = randomInt(attackObject.minDamage, attackObject.maxDamage);
+            const damageRatio = damage / target.hp;
+            target.hp -= damage;
+            
+            output += `${capitalize(characterName)} ${attackObject.verb} ${targetName}`;
+            if (i == 1) {
+              output += percentChance(50) ? ' again' : ' a second time';
             }
-          } else {
-            output += ` and ${targetName} `;
-            if (damageRatio <= 0.2) {
-              output += 'shook its head, hurt but still ok. '
-            } else if (damageRatio > 0.2 && damageRatio <= 0.5) {
-              output += 'let out a cry of pain. '
+
+            if (target.hasOwnProperty('personality')) {
+              output += reactToDamage(damageRatio, target) + ' ';
+
+              if (target.hp <= 0) {
+                output += die(target) + ' ';
+              }
             } else {
-              output += 'howled in pain. '
-            }
+              output += ` and ${targetName} `;
+              if (damageRatio <= 0.2) {
+                output += 'shook its head, hurt but still ok. '
+              } else if (damageRatio > 0.2 && damageRatio <= 0.5) {
+                output += 'let out a cry of pain. '
+              } else {
+                output += 'howled in pain. '
+              }
 
-            if (target.hp <= 0) {
-              output += 'It let out one last cry of pain and collapsed to the ground, dead! ';
+              if (target.hp <= 0) {
+                output += 'It let out one last cry of pain and collapsed to the ground, dead! ';
+              }
             }
           }
         }
@@ -125,9 +127,9 @@ module.exports = (turnOrder, {limitTurns = true} = {}) => {
   const didLose = didLoseFight() || turns >= maxTurns;
   
   if (didLose) {
-    output += 'The party pulled itself together and ran away before they could get battered any more than they already had been!';
+    output += loseText ? loseText : 'The party pulled itself together and ran away before they could get battered any more than they already had been!';
   } else {
-    output += 'The party gathered itself together in victory, continuing their trek onward.';
+    output += winText ? winText : 'The party gathered itself together in victory, continuing their trek onward.';
   }
   
   return output;

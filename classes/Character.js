@@ -58,7 +58,7 @@ module.exports = class Character {
             luck: randomInt(0, 100),
             violence: randomInt(0, 100),
         };
-        this.weapon = choose(weapons);
+        this.weapon = Object.assign({}, choose(weapons));
         this.weaponExperience = choose(['master', 'learner', 'user']);
 
         let torso = choose(clothing.torso);

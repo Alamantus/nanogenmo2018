@@ -13,8 +13,12 @@ class Story {
         this.protagonist = new Character('good', { knowsProtagonist: true, });
         this.protagonist.homeland = choose(['town', 'village', 'city', 'homestead', 'villa', 'fiefdom', 'homeland']);
         this.party = this.generateParty();
-        this.antagonist = new Character('bad');
+        this.antagonist = new Character('bad', {maxHP: randomInt(50, 80)});
+        this.antagonist.isEnemy = true;
         this.antagonist.title = 'the ' + choose(['breaker', 'destroyer', 'doom-bringer', 'destroyer of innocence', 'evil', 'great evil', 'destroyer of worlds']);
+        this.antagonist.weapon.name = choose(['jagged', 'terrifying', 'unholy', 'evil', 'wicked', 'horrific', 'deadly', 'blood-soaked']) + ' ' + this.antagonist.weapon.name;
+        this.antagonist.weapon.minDamage *= this.fullParty.length;
+        this.antagonist.weapon.maxDamage *= Math.round(this.fullParty.length * 1.5);
 
         this.worldName = this.protagonist.race.language.generateName();
         this.evilPlaceName = this.antagonist.race.language.generateName();

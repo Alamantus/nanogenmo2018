@@ -81,7 +81,7 @@ module.exports = (story) => {
             }
             guard.name = guard.hasOwnProperty('personality') ? `the ${guard.gender} ${guard.race.name}` : 'giant ' + guard.name;
             guard.isEnemy = true;
-            output += `${guard.hasOwnProperty('personality') ? guard.describe() + 'holding a ' + guard.weapon.name : 'a ' + guard.name} standing in the way! `;
+            output += `${guard.hasOwnProperty('personality') ? guard.describe() + ' holding a ' + guard.weapon.name : 'a ' + guard.name} standing in the way! `;
 
             let turnOrder;
             if (percentChance(story.averageLuck)) {
@@ -100,6 +100,46 @@ module.exports = (story) => {
             break;
         }
     }
+
+    output += `\n\nThe inside of the ${enemyBuilding} was ${choose(['large', 'cramped', 'damp', 'musty', 'narrow'])} and ${choose(['terrifying', 'imposing', 'fiery', 'unsettling'])}. `;
+    output += `After wandering around for a while, our heroes finally came face to face with ${story.antagonist.title} ${story.antagonist.pronoun.subject}self, ${story.antagonist.fullName}! ${story.antagonist.describe(true)} stood with ${story.antagonist.pronoun.possessive} ${story.antagonist.weapon.name}, pointing it at ${story.protagonist.name}.`;
+    output += `\n\n"You must be ${story.protagonist.fullName}, the thorn in my side I have been hearing about! ${story.antagonist.introduce()} Prepare to die!" ${story.antagonist.name} bellowed.`;
+
+    // Respond to antagonist.
+    
+    output += '\n\n' + generateFight(shuffle([story.antagonist, ...story.fullParty]), {
+        limitTurns: false,
+        canRun: false,
+        winText: `And with that, our heroes had struck the last blow against ${story.antagonist.title}. `,
+        loseText: `The whole party had fallen, and with a haughty sneer, ${story.antagonist.title} cast ${story.antagonist.pronoun.possessive} ${story.antagonist.weapon.name} aside and turned back to where  ${story.antagonist.pronoun.subject} had been sitting when our heroes had arrived. They were defeated.`,
+    });
+
+    if (output.substr(-9) == 'defeated.') {
+        output += `\n\nBut ${story.protagonist.name} stirred, struggling to ${story.protagonist.pronoun.possessive} feet, leaning against ${story.protagonist.pronoun.possessive}  ${story.protagonist.weapon.name}. `;
+        output += `Feebly reaching out, ${story.protagonist.pronoun.subject} stretched out ${story.protagonist.pronoun.possessive} hand toward ${story.antagonist.title} ${story.antagonist.fullName}. `;
+        output += `The sneering smile dropped as ${story.antagonist.name} watched a growing glimmer of light gather in ${story.protagonist.name}'s hand, ${story.antagonist.pronoun.possessive} eyes filling with horror.`;
+        output += `\n\n"No! This is impossible! The ${story.protagonist.race.languageName} magics are just a myth!" ${story.antagonist.pronoun.subject} cried out as the light shot out from ${story.protagonist.name}'s hand, directly into ${story.antagonist.name}'s chest.`;
+        output += `\n\n"Nooooooo!!!" ${story.antagonist.fullName}, ${story.antagonist.title}, screamed as they were burned away to dust.`;
+        output += `\n\nAnd with that, ${story.protagonist.fullName}, the ${story.protagonist.weaponExperience} of the ${story.protagonist.weapon.name}, our great hero, let out their last breath and collapsed to the floor. ${capitalize(story.protagonist.pronoun.possessive)} final act of sacrifice `;
+    } else {
+        const survivors = story.fullParty.filter(character => character.hp > 0);
+        const dead = story.fullParty.filter(character => character.hp <= 0);
+        const numberDead = dead.length;
+        if (numberDead > 0) {
+            output += `${survivors.join(' and ')} looked ${numberDead > 1 ? 'around' : 'down'} at their fallen friend${numberDead > 1 ? 's' : ''} and wept. `;
+            if (dead.findIndex(character => character.fullName == story.protagonist.fullName) > -1) {
+                output += `Among the dead was ${story.protagonist.fullName}, the ${story.protagonist.weaponExperience} of the ${story.protagonist.weapon.name}, our great hero. `;
+            }
+            output += `${survivors.length > 1 ? 'They' : capitalize(survivors[0].pronoun.subject)} made a makeshift cart to carry ${survivors.length > 1 ? 'their' : survivors[0].pronoun.possessive} beloved friend${numberDead > 1 ? 's' : ''} and began the grueling trek back home. `;
+            output += `Though ${survivors.length > 1 ? 'they' : survivors[0].pronoun.subject} had won, ${survivors.length > 1 ? 'they' : survivors[0].pronoun.subject} had paid a great price. But in the end, our heroes `;
+        } else {
+            output += `Grateful for their good fortune, our heroes collected themselves up and basked in the glory of their victory. Our glorious, shining heroes `;
+        }
+    }
+
+    output += `had saved the land of ${story.worldName}, and the dark realm of ${story.evilPlaceName} was freed of its curse.`;
+
+    output += '\n\nTHE END'
     
     return output;
 }

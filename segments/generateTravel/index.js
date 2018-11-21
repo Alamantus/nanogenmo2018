@@ -60,7 +60,12 @@ const generateTravel = (story, randomizeLocation = true) => {
           if (!percentChance(story.averageLuck)) {
             output += encounter(action, story, generateTravel);
           } else {
-            output += 'Not encountering anything interesting, the party continues onward. ';
+            if (action == 'rested at') {
+              output += 'The party set up camp and rested for the night. '
+              story.healParty();
+            } else {
+              output += 'Not encountering anything interesting, the party continues onward. ';
+            }
             output += generateTravel(story);
           }
 

@@ -19,6 +19,7 @@ module.exports = (story) => {
     }
     case 'inn': {
       output += 'The party stops at the inn to get some rest for the night. ';
+      story.healParty();
       break;
     }
     case 'market':

@@ -67,6 +67,10 @@ class Story {
         return party;
     }
 
+    healParty () {
+        story.fullParty.forEach(character => character.hp = character.maxHP);
+    }
+
     generateLocations () {
         const locations = [];
         const number = randomInt(15, 30);

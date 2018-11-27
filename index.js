@@ -77,7 +77,7 @@ class Story {
                 character.hp = character.maxHP;
             } else {
                 character.hp += amount;
-                if (character.hp > maxHP) character.hp = character.maxHP;
+                if (character.hp > character.maxHP) character.hp = character.maxHP;
             }
         });
     }

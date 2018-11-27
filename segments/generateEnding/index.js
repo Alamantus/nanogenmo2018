@@ -94,12 +94,19 @@ module.exports = (story) => {
 
             output += '\n\n' + generateFight(turnOrder, {
                 canRun: false,
-                winText: `${choose(story.fullParty).name} then stood watch while the rest of the party got through the door.`,
-                loseText: `With a burst of divine light, ${choose(story.fullParty).name} cried out, and ${guard.name.includes('the') ? guard.name : 'the ' + guard.name} was suddenly gone! Stunned but not surprised, the party entered the ${enemyBuilding}.`,
+                winText: `${choose(story.fullParty).name} then stood watch while the rest of the party got through the door. `,
+                loseText: `With a burst of divine light, ${choose(story.fullParty).name} cried out, and ${guard.name.includes('the') ? guard.name : 'the ' + guard.name} was suddenly gone! Stunned but not surprised, the party entered the ${enemyBuilding}. `,
             });
             break;
         }
     }
+
+    output += `Our heroes were tired after their fight, so they decided to sit and rest in an alcove just inside the door to recover before trying to find ${story.antagonist.title}. `;
+    const healer = choose(story.fullParty);
+    const healAmount = randomInt(story.averageMaxHP / 2, story.averageMaxHP);
+    const healFeeling = (story.averageMaxHP + (story.averageMaxHP / 2)) / 2 >= healAmount ? 'a lot' : 'a little bit';
+    output += `${healer.name} ${choose(['passed around some food', 'said a prayer', 'led the party in meditation', 'did some breathing exercises with the others'])}, and the party felt ${healFeeling} better.`
+    story.healParty(healAmount);
 
     output += `\n\nThe inside of the ${enemyBuilding} was ${choose(['large', 'cramped', 'damp', 'musty', 'narrow'])} and ${choose(['terrifying', 'imposing', 'fiery', 'unsettling'])}. `;
     output += `After wandering around for a while, our heroes finally came face to face with ${story.antagonist.title} ${story.antagonist.pronoun.subject}self, ${story.antagonist.fullName}! ${story.antagonist.describe(true)} stood with ${story.antagonist.pronoun.possessive} ${story.antagonist.weapon.name}, pointing it at ${story.protagonist.name}.`;
@@ -126,7 +133,7 @@ module.exports = (story) => {
         const dead = story.fullParty.filter(character => character.hp <= 0);
         const numberDead = dead.length;
         if (numberDead > 0) {
-            output += `${survivors.join(' and ')} looked ${numberDead > 1 ? 'around' : 'down'} at their fallen friend${numberDead > 1 ? 's' : ''} and wept. `;
+            output += `${survivors.map(survivor => survivor.name).join(' and ')} looked ${numberDead > 1 ? 'around' : 'down'} at their fallen friend${numberDead > 1 ? 's' : ''} and wept. `;
             if (dead.findIndex(character => character.fullName == story.protagonist.fullName) > -1) {
                 output += `Among the dead was ${story.protagonist.fullName}, the ${story.protagonist.weaponExperience} of the ${story.protagonist.weapon.name}, our great hero. `;
             }

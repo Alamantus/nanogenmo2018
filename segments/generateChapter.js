@@ -16,7 +16,7 @@ module.exports = (story, isEnding = false) => {
     if (!isEnding) {
         output += 'Chapter ' + story.chapterNumber;
     } else {
-        output += story.title;
+        output += 'Final Chapter';
     }
     output += '\n\n~~~~~~~~\n' + quote + '\n~~~~~~~~\n\n';
 

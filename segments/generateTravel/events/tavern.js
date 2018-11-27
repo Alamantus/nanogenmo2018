@@ -161,7 +161,7 @@ module.exports = (story) => {
         break;
       }
       case 'play': {
-        const gameType = choose(['conquer', 'splits', 'sets', 'overpower']);
+        const gameType = choose(['conquer', 'splits', /* 'sets',  */'overpower']);
         const gameTool = ['conquer', 'splits'].includes(gameType) ? 'deck of cards' : 'set of dice';
         if (numberOfPeople > 0) {
           let target = choose(people);

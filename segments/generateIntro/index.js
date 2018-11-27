@@ -127,7 +127,7 @@ module.exports = (story) => {
         });
     }
 
-    output += `Having gathered enough friends to begin ${story.protagonist.pronoun.possessive} journey, ${story.protagonist.name} sets out from ${story.protagonist.pronoun.possessive} ${story.currentLocation.size} and ${story.currentLocation.description} home in the ${story.currentLocation.specifier} with ${story.protagonist.pronoun.possessive} newly-assembled party to brave the dangers on the way to the lair of ${story.antagonist.title}...`;
+    output += `Having gathered enough friends to begin ${story.protagonist.pronoun.possessive} journey, ${story.protagonist.name} set out from ${story.protagonist.pronoun.possessive} ${story.currentLocation.size} and ${story.currentLocation.description} home in the ${story.currentLocation.specifier} with ${story.protagonist.pronoun.possessive} newly-assembled party to brave the dangers on the way to the lair of ${story.antagonist.title}...`;
     
     return output + '\n\n';
 }
